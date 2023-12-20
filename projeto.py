@@ -2,6 +2,8 @@ import sys
 import pygame
 from pygame.locals import *
 from sys import exit
+from personagens import *
+from personagens import Guerreiro
 
 pygame.mixer.init()
 pygame.init()
@@ -14,13 +16,18 @@ musica_de_fundo = pygame.mixer.music.load("audio/music/cloud-of-sorrow.wav")
 pygame.mixer.music.play(-1)
 
 
-#weslley é gay
+todas_as_sprites = pygame.sprite.Group()
+guerreiro = Guerreiro()
+todas_as_sprites.add(guerreiro)
 
 
+menu = pygame.image.load("images/fundo/menu.png").convert()
+menu = pygame.transform.scale(menu, (largura, altura))
 
-fundo = pygame.image.load("images/fundo/image01.jpg")
-fundo2 = pygame.image.load("images/fundo/image02.jpg")
-fundo_best = pygame.image.load("images/fundo/best01.jpg")
+battle1 = pygame.image.load("images/fundo/Battleground1.png").convert()
+battle1 = pygame.transform.scale(battle1, (largura, altura))
+
+fundo_best = pygame.image.load("images/fundo/best01.jpg").convert()
 
 # cores
 
@@ -58,14 +65,14 @@ def cena_menu():
                     return "jogar"  # mudar para a cena de jogar
                 elif best_botao.collidepoint(event.pos):
                     print('clicou em bestiary')
-                    return "best" # mudar para a cena bestiário
+                    return "best"  # mudar para a cena bestiário
                 elif exit_botao.collidepoint(event.pos):
                     print("clicou em exit")
                     pygame.quit()
                     sys.exit()
 
         # Preencher a tela
-        tela.blit(fundo, (0, 0))
+        tela.blit(menu, (0, 0))
 
         # Desenhar os botões retangulos
         pygame.draw.rect(tela, play_cor, play_botao)
@@ -85,37 +92,37 @@ def cena_menu():
                                                            ) // 2, exit_botao.y + (exit_botao.height - exit_texto_renderizado.get_height()) // 2))
 
         # Atualizar a tela
-        pygame.display.update()
+        pygame.display.flip()
 
         # Controlar a taxa de atualização
         # pygame.time.Clock().tick(60)
 
 
 def cena_jogar():
+    relogio = pygame.time.Clock()
     while True:
+        relogio.tick(25)
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
-                
-        # preencher com preto, para limpar a tela
-        tela.fill((0, 0, 0))
 
-        # preencher a tela com a cor de fundo da cena de jogar
-        tela.blit(fundo2, (0, 0))
+        tela.blit(battle1, (0, 0))
+
+        todas_as_sprites.update()
+        todas_as_sprites.draw(tela)
 
         # atualizar a tela
-        pygame.display.update()
+        pygame.display.flip()
 
-        
+
 def cena_bestiario():
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
-                
-                
+
         # preencher com preto, para limpar a tela
         tela.fill((0, 0, 0))
 
@@ -123,10 +130,9 @@ def cena_bestiario():
         tela.blit(fundo_best, (0, 0))
 
         # atualizar a tela
-        pygame.display.update()
+        pygame.display.flip()
 
-        
-        
+
 # Iniciar a cena do menu
 cena_atual = "menu"
 
