@@ -14,7 +14,7 @@ musica_de_fundo = pygame.mixer.music.load("audio/music/cloud-of-sorrow.wav")
 pygame.mixer.music.play(-1)
 
 
-#teste
+#weslley é gay
 
 
 
