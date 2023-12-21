@@ -1,4 +1,5 @@
 import pygame
+from projeto import sprite_sheet_w
 
 class Personagem:                # Personagem pai
     def __init__(self, nome):
@@ -38,23 +39,22 @@ class Guerreiro(Personagem, pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.sprites = []
-        self.sprites.append(pygame.image.load("sprites/warrior/sprite_0.png"))
-        self.sprites.append(pygame.image.load("sprites/warrior/sprite_1.png"))
-        self.sprites.append(pygame.image.load("sprites/warrior/sprite_2.png"))
-        self.atual = 0
-        self.image = self.sprites[self.atual]
-        self.image = pygame.transform.scale(self.image, (32*6, 32*6))
-
+        for i in range(9):
+            img = sprite_sheet_w.subsurface((i * 38,0), (26, 38))
+            self.sprites.append(img)
+            
+        self.index_lista = 0
+        self.image = self.sprites[self.index_lista]
         self.rect = self.image.get_rect()
         self.rect.topleft = 100, 250
 
         
     def update(self):
-        self.atual = self.atual + 0.5
-        if self.atual >= len(self.sprites):
-            self.atual = 0
-        self.image = self.sprites[int(self.atual)]
-        self.image = pygame.transform.scale(self.image, (32*6, 32*6))
+        self.index_lista = self.index_lista + 0.25
+        if self.index_lista > 9:
+            self.index_lista = 0
+        self.index_lista += 0.25
+        self.image = self.sprites[int(self.index_lista)]
 
 
     def ataque_basico(self, alvo):

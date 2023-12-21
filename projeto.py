@@ -1,9 +1,13 @@
 import sys
 import pygame
+import os
 from pygame.locals import *
-from sys import exit
 from personagens import *
 from personagens import Guerreiro
+
+diretorio_principal = os.path.dirname(__file__)
+diretorio_imagens = os.path.join(diretorio_principal, 'sprites')
+
 
 pygame.mixer.init()
 pygame.init()
@@ -20,6 +24,7 @@ todas_as_sprites = pygame.sprite.Group()
 guerreiro = Guerreiro()
 todas_as_sprites.add(guerreiro)
 
+sprite_sheet_w = pygame.image.load(os.path.join(diretorio_imagens, 'warrior/sheet.png')).convert_alpha()
 
 menu = pygame.image.load("images/fundo/menu.png").convert()
 menu = pygame.transform.scale(menu, (largura, altura))
@@ -31,8 +36,8 @@ fundo_best = pygame.image.load("images/fundo/best01.jpg").convert()
 
 # cores
 
-cor_botao = (0, 0, 0)
-cor_texto = (255, 255, 255)
+cor_botao = (0, 0, 0)  # cor preta
+cor_texto = (255, 255, 255)  # cor branca
 
 # Configurações do botão "Play"
 play_botao = pygame.Rect(largura // 2 - 100, altura // 2 - 25, 200, 50)
@@ -101,7 +106,7 @@ def cena_menu():
 def cena_jogar():
     relogio = pygame.time.Clock()
     while True:
-        relogio.tick(25)
+        relogio.tick(15)
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
