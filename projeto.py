@@ -1,9 +1,11 @@
 import sys
 import pygame
+import os
 from pygame.locals import *
-from sys import exit
 from personagens import *
-from personagens import Guerreiro
+
+diretorio_principal = os.path.dirname(__file__)
+diretorio_sprites = os.path.join(diretorio_principal, 'sprites')
 
 pygame.mixer.init()
 pygame.init()
@@ -16,8 +18,14 @@ musica_de_fundo = pygame.mixer.music.load("audio/music/cloud-of-sorrow.wav")
 pygame.mixer.music.play(-1)
 
 
+# Sprites
+sprite_warrior = pygame.image.load(os.path.join(diretorio_sprites, 'warrior/warrior.png')).convert_alpha()
+
+
+
+
 todas_as_sprites = pygame.sprite.Group()
-guerreiro = Guerreiro()
+guerreiro = Warrior(sprite_warrior)
 todas_as_sprites.add(guerreiro)
 
 
@@ -109,8 +117,8 @@ def cena_jogar():
 
         tela.blit(battle1, (0, 0))
 
-        todas_as_sprites.update()
         todas_as_sprites.draw(tela)
+        todas_as_sprites.update()
 
         # atualizar a tela
         pygame.display.flip()

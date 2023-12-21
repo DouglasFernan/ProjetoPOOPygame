@@ -1,5 +1,6 @@
 import pygame
 
+
 class Personagem:                # Personagem pai
     def __init__(self, nome):
         self._nome = nome
@@ -12,7 +13,6 @@ class Personagem:                # Personagem pai
 
     def ataque_basico(self, alvo):
         pass
-
 
 
 class Mago(Personagem):
@@ -30,32 +30,55 @@ class Mago(Personagem):
 
     def ataque_basico(self, alvo):
         pass
+
     def recuperar_mana(self):
         pass
 
 
-class Guerreiro(Personagem, pygame.sprite.Sprite):
-    def __init__(self):
+# class Guerreiro(Personagem, pygame.sprite.Sprite):
+#     def __init__(self):
+#         pygame.sprite.Sprite.__init__(self)
+#         self.sprites = []
+#         self.sprites.append(pygame.image.load("sprites/warrior/sprite_0.png"))
+#         self.sprites.append(pygame.image.load("sprites/warrior/sprite_1.png"))
+#         self.sprites.append(pygame.image.load("sprites/warrior/sprite_2.png"))
+#         self.atual = 0
+#         self.image = self.sprites[self.atual]
+#         self.image = pygame.transform.scale(self.image, (32*6, 32*6))
+
+#         self.rect = self.image.get_rect()
+#         self.rect.topleft = 100, 250
+
+#     def update(self):
+#         self.atual = self.atual + 0.5
+#         if self.atual >= len(self.sprites):
+#             self.atual = 0
+#         self.image = self.sprites[int(self.atual)]
+#         self.image = pygame.transform.scale(self.image, (32*6, 32*6))
+
+#     def ataque_basico(self, alvo):
+#         pass
+
+
+class Warrior(Personagem, pygame.sprite.Sprite):
+    def __init__(self, sprite):
         pygame.sprite.Sprite.__init__(self)
         self.sprites = []
-        self.sprites.append(pygame.image.load("sprites/warrior/sprite_0.png"))
-        self.sprites.append(pygame.image.load("sprites/warrior/sprite_1.png"))
-        self.sprites.append(pygame.image.load("sprites/warrior/sprite_2.png"))
-        self.atual = 0
-        self.image = self.sprites[self.atual]
-        self.image = pygame.transform.scale(self.image, (32*6, 32*6))
+        for i in range(10):
+            img = sprite.subsurface((i * 135, 0), (135, 135))
+            img = pygame.transform.scale(img, (135 * 4, 135*4))
+            self.sprites.append(img)
 
+        self.index_lista = 0
+        self.image = self.sprites[self.index_lista]
         self.rect = self.image.get_rect()
-        self.rect.topleft = 100, 250
+        self.rect.topleft = (-100, 100)
 
-        
     def update(self):
-        self.atual = self.atual + 0.5
-        if self.atual >= len(self.sprites):
-            self.atual = 0
-        self.image = self.sprites[int(self.atual)]
-        self.image = pygame.transform.scale(self.image, (32*6, 32*6))
-
+        if self.index_lista > 9:
+            self.index_lista = 0
+        self.index_lista += 0.25
+        self.image = self.sprites[int(self.index_lista)]
 
     def ataque_basico(self, alvo):
         pass
@@ -91,8 +114,10 @@ class Clerigo(Personagem):
 
     def ataque_basico(self, alvo):
         pass
+
     def curar(self, alvo):
         pass
+
     def recuperar_fe(self):
         pass
 
@@ -125,14 +150,3 @@ class Elfo(Personagem):
 
     def ataque_basico(self, alvo):
         pass
-
-
-
-
-
-
-
-
-
-
-
