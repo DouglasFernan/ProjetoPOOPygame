@@ -3,10 +3,11 @@ import pygame
 import os
 from pygame.locals import *
 from personagens import *
-from personagens import Guerreiro
 
 diretorio_principal = os.path.dirname(__file__)
-diretorio_imagens = os.path.join(diretorio_principal, 'sprites')
+diretorio_sprites = os.path.join(diretorio_principal, 'sprites')
+
+
 
 
 pygame.mixer.init()
@@ -20,11 +21,20 @@ musica_de_fundo = pygame.mixer.music.load("audio/music/cloud-of-sorrow.wav")
 pygame.mixer.music.play(-1)
 
 
-todas_as_sprites = pygame.sprite.Group()
-guerreiro = Guerreiro()
-todas_as_sprites.add(guerreiro)
+# Sprites
+sprite_warrior = pygame.image.load(os.path.join(diretorio_sprites, 'warrior/warrior.png')).convert_alpha()
+sprite_hunter = pygame.image.load(os.path.join(diretorio_sprites, 'hunter/hunter.png')).convert_alpha()
+sprite_wizard = pygame.image.load(os.path.join(diretorio_sprites, 'wizard/wizard.png')).convert_alpha()
 
-sprite_sheet_w = pygame.image.load(os.path.join(diretorio_imagens, 'warrior/sheet.png')).convert_alpha()
+
+todas_as_sprites = pygame.sprite.Group()
+hunter = Hunter(sprite_hunter)
+warrior = Warrior(sprite_warrior)
+wizard = Wizard(sprite_wizard)
+# todas_as_sprites.add(wizard)
+# todas_as_sprites.add(hunter)
+# todas_as_sprites.add(warrior)
+
 
 menu = pygame.image.load("images/fundo/menu.png").convert()
 menu = pygame.transform.scale(menu, (largura, altura))
@@ -106,16 +116,16 @@ def cena_menu():
 def cena_jogar():
     relogio = pygame.time.Clock()
     while True:
-        relogio.tick(15)
+        relogio.tick(20)
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
 
         tela.blit(battle1, (0, 0))
-
-        todas_as_sprites.update()
+        todas_as_sprites.add(wizard)
         todas_as_sprites.draw(tela)
+        todas_as_sprites.update()
 
         # atualizar a tela
         pygame.display.flip()
