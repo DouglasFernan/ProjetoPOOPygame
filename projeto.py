@@ -25,15 +25,21 @@ pygame.mixer.music.play(-1)
 sprite_warrior = pygame.image.load(os.path.join(diretorio_sprites, 'warrior/warrior.png')).convert_alpha()
 sprite_hunter = pygame.image.load(os.path.join(diretorio_sprites, 'hunter/hunter.png')).convert_alpha()
 sprite_wizard = pygame.image.load(os.path.join(diretorio_sprites, 'wizard/wizard.png')).convert_alpha()
-
+sprite_archer = pygame.image.load(os.path.join(diretorio_sprites, 'archer/archer.png')).convert_alpha()
 
 todas_as_sprites = pygame.sprite.Group()
+
+# Instâncias
+
 hunter = Hunter(sprite_hunter)
 warrior = Warrior(sprite_warrior)
 wizard = Wizard(sprite_wizard)
+archer = Archer(sprite_archer)
+
 # todas_as_sprites.add(wizard)
 # todas_as_sprites.add(hunter)
 # todas_as_sprites.add(warrior)
+# todas_as_sprites.add(archer)
 
 
 menu = pygame.image.load("images/fundo/menu.png").convert()
@@ -123,6 +129,9 @@ def cena_jogar():
                 sys.exit()
 
         tela.blit(battle1, (0, 0))
+        todas_as_sprites.add(warrior)
+        todas_as_sprites.add(hunter)
+        todas_as_sprites.add(archer)
         todas_as_sprites.add(wizard)
         todas_as_sprites.draw(tela)
         todas_as_sprites.update()

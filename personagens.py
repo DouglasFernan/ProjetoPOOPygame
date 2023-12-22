@@ -76,7 +76,7 @@ class Warrior(Personagem, pygame.sprite.Sprite):
         self.index_lista = 0
         self.image = self.sprites[self.index_lista]
         self.rect = self.image.get_rect()
-        self.rect.topleft = (-100, 100)
+        self.rect.topleft = (450, 100)
 
     def update(self):
         if self.index_lista > 9:
@@ -94,13 +94,13 @@ class Hunter(Personagem, pygame.sprite.Sprite):
         self.sprites = []
         for i in range(8):
             img = sprite.subsurface((i * 150, 0), (150, 150))
-            img = pygame.transform.scale(img, (150 * 4, 150 * 4))
+            img = pygame.transform.scale(img, (150 * int(4.5), 150 * int(4.5)))
             self.sprites.append(img)
 
         self.index_lista = 0
         self.image = self.sprites[self.index_lista]
         self.rect = self.image.get_rect()
-        self.rect.topleft = (-120, 60)
+        self.rect.topleft = (200, 60) #-120, 60
 
     def update(self):
         if self.index_lista > 7:
@@ -112,16 +112,25 @@ class Hunter(Personagem, pygame.sprite.Sprite):
         pass
 
 
-class Arqueiro(Personagem):
-    def __init__(self, nome):
-        super().__init__(nome)
-        self._ataque = 12
-        self._defesa = 5
-        self._vida = 70
-        self._maxVida = 70
-        self._descricao = (
-            'Arqueiro Mestre -> Atirador habilidoso, especializado em acertar alvos à distância')
-        self._xp = 0
+class Archer(Personagem, pygame.sprite.Sprite):
+    def __init__(self, sprite):
+        pygame.sprite.Sprite.__init__(self)
+        self.sprites = []
+        for i in range(10):
+            img = sprite.subsurface((i * 100, 0), (100, 100))
+            img = pygame.transform.scale(img, (100 * int(4.5), 100* int(4.5)))
+            self.sprites.append(img)
+
+        self.index_lista = 0
+        self.image = self.sprites[self.index_lista]
+        self.rect = self.image.get_rect()
+        self.rect.topleft = ( 100, 100) #-60
+
+    def update(self):
+        if self.index_lista > 9:
+            self.index_lista = 0
+        self.index_lista += 0.50
+        self.image = self.sprites[int(self.index_lista)]
 
     def ataque_basico(self, alvo):
         pass
