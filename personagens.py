@@ -21,7 +21,7 @@ class Wizard(Personagem, pygame.sprite.Sprite):
         self.sprites = []
         for i in range(6):
             img = sprite.subsurface((i * 231, 0), (231, 190))
-            img = pygame.transform.scale(img, (231 * int(2.5), 231* int(2.5)))
+            img = pygame.transform.scale(img, (231 * int(2.5), 231 * int(2.5)))
             self.sprites.append(img)
 
         self.index_lista = 0
@@ -76,7 +76,7 @@ class Warrior(Personagem, pygame.sprite.Sprite):
         self.index_lista = 0
         self.image = self.sprites[self.index_lista]
         self.rect = self.image.get_rect()
-        self.rect.topleft = (450, 100)
+        self.rect.topleft = (-100, 100)
 
     def update(self):
         if self.index_lista > 9:
@@ -100,7 +100,7 @@ class Hunter(Personagem, pygame.sprite.Sprite):
         self.index_lista = 0
         self.image = self.sprites[self.index_lista]
         self.rect = self.image.get_rect()
-        self.rect.topleft = (200, 60) #-120, 60
+        self.rect.topleft = (-120, 60)  # -120, 60
 
     def update(self):
         if self.index_lista > 7:
@@ -118,13 +118,13 @@ class Archer(Personagem, pygame.sprite.Sprite):
         self.sprites = []
         for i in range(10):
             img = sprite.subsurface((i * 100, 0), (100, 100))
-            img = pygame.transform.scale(img, (100 * int(4.5), 100* int(4.5)))
+            img = pygame.transform.scale(img, (100 * int(4.5), 100 * int(4.5)))
             self.sprites.append(img)
 
         self.index_lista = 0
         self.image = self.sprites[self.index_lista]
         self.rect = self.image.get_rect()
-        self.rect.topleft = ( 100, 100) #-60
+        self.rect.topleft = (-20, 170)
 
     def update(self):
         if self.index_lista > 9:
@@ -136,16 +136,25 @@ class Archer(Personagem, pygame.sprite.Sprite):
         pass
 
 
-class Elfo(Personagem):
-    def __init__(self, nome):
-        super().__init__(nome)
-        self._ataque = 10
-        self._defesa = 7
-        self._vida = 80
-        self._maxVida = 80
-        self._descricao = (
-            'Elfo -> Especializado em técnicas marciais, usando agilidade e destreza em conjunto de armas')
-        self._xp = 0
+class Knight(Personagem, pygame.sprite.Sprite):
+    def __init__(self, sprite):
+        pygame.sprite.Sprite.__init__(self)
+        self.sprites = []
+        for i in range(4):
+            img = sprite.subsurface((i * 42, 0), (42, 42))
+            img = pygame.transform.scale(img, (42 * 5, 42 * 5))
+            self.sprites.append(img)
+
+        self.index_lista = 0
+        self.image = self.sprites[self.index_lista]
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (80, 250)
+
+    def update(self):
+        if self.index_lista > 3:
+            self.index_lista = 0
+        self.index_lista += 0.25
+        self.image = self.sprites[int(self.index_lista)]
 
     def ataque_basico(self, alvo):
         pass
