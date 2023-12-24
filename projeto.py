@@ -142,14 +142,19 @@ def cena_escolher_personagem():
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if botao_archer.collidepoint(event.pos):
+                    todas_as_sprites.add(archer)
                     return ("jogar")
                 elif botao_warrior.collidepoint(event.pos):
+                    todas_as_sprites.add(warrior)
                     return ("jogar")
                 elif botao_hunter.collidepoint(event.pos):
+                    todas_as_sprites.add(hunter)
                     return ("jogar")
                 elif botao_wizard.collidepoint(event.pos):
+                    todas_as_sprites.add(wizard)
                     return ("jogar")
                 elif botao_knight.collidepoint(event.pos):
+                    todas_as_sprites.add(knight)
                     return ("jogar")
 
         tela.blit(escolha, (0, 0))
@@ -201,7 +206,7 @@ def cena_jogar():
 
         tela.blit(battle1, (0, 0))
         # todas_as_sprites.add(warrior)
-        todas_as_sprites.add(wizard)
+        # todas_as_sprites.add(wizard)
         # todas_as_sprites.add(hunter)
         # todas_as_sprites.add(archer)
         # todas_as_sprites.add(knight)
