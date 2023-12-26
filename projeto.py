@@ -7,7 +7,7 @@ from personagens import *
 diretorio_principal = os.path.dirname(__file__)
 diretorio_sprites = os.path.join(diretorio_principal, 'sprites')
 
-
+ 
 
 
 pygame.mixer.init()
@@ -26,6 +26,7 @@ sprite_warrior = pygame.image.load(os.path.join(diretorio_sprites, 'warrior/warr
 sprite_hunter = pygame.image.load(os.path.join(diretorio_sprites, 'hunter/hunter.png')).convert_alpha()
 sprite_wizard = pygame.image.load(os.path.join(diretorio_sprites, 'wizard/wizard.png')).convert_alpha()
 sprite_archer = pygame.image.load(os.path.join(diretorio_sprites, 'archer/archer.png')).convert_alpha()
+sprite_knight = pygame.image.load(os.path.join(diretorio_sprites, 'knight/knight.png')).convert_alpha()
 
 todas_as_sprites = pygame.sprite.Group()
 
@@ -35,11 +36,13 @@ hunter = Hunter(sprite_hunter)
 warrior = Warrior(sprite_warrior)
 wizard = Wizard(sprite_wizard)
 archer = Archer(sprite_archer)
+knight = Knight(sprite_knight)
 
 # todas_as_sprites.add(wizard)
 # todas_as_sprites.add(hunter)
 # todas_as_sprites.add(warrior)
 # todas_as_sprites.add(archer)
+# todas_as_sprites.add(knight)
 
 
 menu = pygame.image.load("images/fundo/menu.png").convert()
@@ -49,6 +52,12 @@ battle1 = pygame.image.load("images/fundo/Battleground1.png").convert()
 battle1 = pygame.transform.scale(battle1, (largura, altura))
 
 fundo_best = pygame.image.load("images/fundo/best01.jpg").convert()
+fundo_best = pygame.transform.scale(fundo_best, (largura, altura))
+
+escolha = pygame.image.load("images/fundo/escolha.png").convert()
+escolha = pygame.transform.scale(escolha, (largura, altura))
+
+
 
 # cores
 
@@ -70,6 +79,13 @@ exit_botao = pygame.Rect(largura // 2 - 100, altura // 2 + 125, 200, 50)
 exit_cor = cor_botao
 exit_texto = "Exit"
 
+# botoes cena escolher personagem
+botao_archer = pygame.Rect(largura // 2 - 100, altura // 2 - 100, 200, 50)
+botao_warrior = pygame.Rect(largura // 2 - 100, altura // 2 - 25, 200, 50)
+botao_hunter = pygame.Rect(largura // 2 - 100, altura // 2 + 50, 200, 50)
+botao_wizard = pygame.Rect(largura // 2 - 100, altura // 2 + 125, 200, 50)
+botao_knight = pygame.Rect(largura // 2 - 100, altura // 2 + 200, 200, 50)
+
 # Configurações do texto
 fonte = pygame.font.Font("fonts/BerkshireSwash-Regular.ttf", 30)
 
@@ -83,7 +99,7 @@ def cena_menu():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if play_botao.collidepoint(event.pos):
                     print("clicou em play")
-                    return "jogar"  # mudar para a cena de jogar
+                    return "escolher_personagem"  # mudar para a cena de jogar
                 elif best_botao.collidepoint(event.pos):
                     print('clicou em bestiary')
                     return "best"  # mudar para a cena bestiário
@@ -93,7 +109,7 @@ def cena_menu():
                     sys.exit()
 
         # Preencher a tela
-        tela.blit(menu, (0, 0))
+        tela.blit(escolha, (0, 0))
 
         # Desenhar os botões retangulos
         pygame.draw.rect(tela, play_cor, play_botao)
@@ -118,7 +134,67 @@ def cena_menu():
         # Controlar a taxa de atualização
         # pygame.time.Clock().tick(60)
 
+def cena_escolher_personagem():
+    while True:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if botao_archer.collidepoint(event.pos):
+                    todas_as_sprites.add(archer)
+                    return ("jogar")
+                elif botao_warrior.collidepoint(event.pos):
+                    todas_as_sprites.add(warrior)
+                    return ("jogar")
+                elif botao_hunter.collidepoint(event.pos):
+                    todas_as_sprites.add(hunter)
+                    return ("jogar")
+                elif botao_wizard.collidepoint(event.pos):
+                    todas_as_sprites.add(wizard)
+                    return ("jogar")
+                elif botao_knight.collidepoint(event.pos):
+                    todas_as_sprites.add(knight)
+                    return ("jogar")
 
+        tela.blit(escolha, (0, 0))
+
+        # Desenhar o texto
+        texto_escolha = fonte.render("Choose your character", True, cor_botao)
+        tela.blit(texto_escolha, ((largura - texto_escolha.get_width()) // 2, 90))
+
+        # Desenhar os botões
+        pygame.draw.rect(tela, cor_botao, botao_archer)
+        pygame.draw.rect(tela, cor_botao, botao_warrior)
+        pygame.draw.rect(tela, cor_botao, botao_hunter)
+        pygame.draw.rect(tela, cor_botao, botao_wizard)
+        pygame.draw.rect(tela, cor_botao, botao_knight)
+
+        # Adicionar texto nos botões
+        texto_archer = fonte.render("Archer", True, cor_texto)
+        texto_warrior = fonte.render("Warrior", True, cor_texto)
+        texto_hunter = fonte.render("Hunter", True, cor_texto)
+        texto_wizard = fonte.render("Wizard", True, cor_texto)
+        texto_knight = fonte.render("Knight", True, cor_texto)
+
+        tela.blit(texto_archer, (botao_archer.x + (botao_archer.width - texto_archer.get_width()) // 2,
+                                  botao_archer.y + (botao_archer.height - texto_archer.get_height()) // 2))
+        tela.blit(texto_warrior, (botao_warrior.x + (botao_warrior.width - texto_warrior.get_width()) // 2,
+                                   botao_warrior.y + (botao_warrior.height - texto_warrior.get_height()) // 2))
+        tela.blit(texto_hunter, (botao_hunter.x + (botao_hunter.width - texto_hunter.get_width()) // 2,
+                                  botao_hunter.y + (botao_hunter.height - texto_hunter.get_height()) // 2))
+        tela.blit(texto_wizard, (botao_wizard.x + (botao_wizard.width - texto_wizard.get_width()) // 2,
+                                  botao_wizard.y + (botao_wizard.height - texto_wizard.get_height()) // 2))
+        tela.blit(texto_knight, (botao_knight.x + (botao_knight.width - texto_knight.get_width()) // 2,
+                                  botao_knight.y + (botao_knight.height - texto_knight.get_height()) // 2))
+
+        # Atualizar a tela
+        pygame.display.flip()
+
+        # Controlar a taxa de atualização
+        pygame.time.Clock().tick(60)
+        
+        
 def cena_jogar():
     relogio = pygame.time.Clock()
     while True:
@@ -129,10 +205,11 @@ def cena_jogar():
                 sys.exit()
 
         tela.blit(battle1, (0, 0))
-        todas_as_sprites.add(warrior)
-        todas_as_sprites.add(hunter)
-        todas_as_sprites.add(archer)
-        todas_as_sprites.add(wizard)
+        # todas_as_sprites.add(warrior)
+        # todas_as_sprites.add(wizard)
+        # todas_as_sprites.add(hunter)
+        # todas_as_sprites.add(archer)
+        # todas_as_sprites.add(knight)
         todas_as_sprites.draw(tela)
         todas_as_sprites.update()
 
@@ -146,9 +223,6 @@ def cena_bestiario():
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
-
-        # preencher com preto, para limpar a tela
-        tela.fill((0, 0, 0))
 
         # preencher a tela com a cor de fundo da cena de jogar
         tela.blit(fundo_best, (0, 0))
@@ -167,3 +241,5 @@ while True:
         cena_atual = cena_jogar()
     elif cena_atual == "best":
         cena_atual = cena_bestiario()
+    elif cena_atual == "escolher_personagem":
+        cena_atual = cena_escolher_personagem()
