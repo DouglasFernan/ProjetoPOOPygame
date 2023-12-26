@@ -1,2 +1,1 @@
-        # # preencher a tela com a cor de fundo da cena de jogar
-        # tela.blit(fundo2, (0, 0))
+sprite_warrior_attack = pygame.image.load(os.path.join(diretorio_sprites, ''))
