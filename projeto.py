@@ -36,7 +36,7 @@ hunter = Hunter(sprite_hunter)
 warrior = Warrior(sprite_warrior)
 wizard = Wizard(sprite_wizard)
 archer = Archer(sprite_archer)
-knight = Knight(sprite_knight)
+knight = Knight()
 
 # todas_as_sprites.add(wizard)
 # todas_as_sprites.add(hunter)

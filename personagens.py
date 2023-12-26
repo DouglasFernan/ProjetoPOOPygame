@@ -137,24 +137,29 @@ class Archer(Personagem, pygame.sprite.Sprite):
 
 
 class Knight(Personagem, pygame.sprite.Sprite):
-    def __init__(self, sprite):
+    def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.sprites = []
-        for i in range(4):
-            img = sprite.subsurface((i * 42, 0), (42, 42))
-            img = pygame.transform.scale(img, (42 * 5, 42 * 5))
-            self.sprites.append(img)
+        self.sprites.append(pygame.image.load("sprites/knight/HeroKnight_Idle_0.png"))
+        self.sprites.append(pygame.image.load("sprites/knight/HeroKnight_Idle_1.png"))
+        self.sprites.append(pygame.image.load("sprites/knight/HeroKnight_Idle_2.png"))
+        self.sprites.append(pygame.image.load("sprites/knight/HeroKnight_Idle_3.png"))
+        self.sprites.append(pygame.image.load("sprites/knight/HeroKnight_Idle_4.png"))
+        self.sprites.append(pygame.image.load("sprites/knight/HeroKnight_Idle_5.png"))
+        self.sprites.append(pygame.image.load("sprites/knight/HeroKnight_Idle_6.png"))
+        self.sprites.append(pygame.image.load("sprites/knight/HeroKnight_Idle_7.png")) 
+        self.atual = 0
+        self.image = self.sprites[self.atual]
 
-        self.index_lista = 0
-        self.image = self.sprites[self.index_lista]
         self.rect = self.image.get_rect()
-        self.rect.topleft = (80, 250)
+        self.rect.topleft = 40, 250
 
     def update(self):
-        if self.index_lista > 3:
-            self.index_lista = 0
-        self.index_lista += 0.25
-        self.image = self.sprites[int(self.index_lista)]
+        self.atual = self.atual + 0.5
+        if self.atual >= len(self.sprites):
+            self.atual = 0
+        self.image = self.sprites[int(self.atual)]
+        self.image = pygame.transform.scale(self.image, (100*4, 55*4))
 
     def ataque_basico(self, alvo):
         pass
