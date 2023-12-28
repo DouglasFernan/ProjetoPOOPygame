@@ -3,12 +3,10 @@ import pygame
 import os
 from pygame.locals import *
 from personagens import *
+from inimigos import *
 
 diretorio_principal = os.path.dirname(__file__)
 diretorio_sprites = os.path.join(diretorio_principal, 'sprites')
-
- 
-
 
 pygame.mixer.init()
 pygame.init()
@@ -17,18 +15,24 @@ largura = 1000
 altura = 550
 tela = pygame.display.set_mode((largura, altura))
 musica_de_fundo = pygame.mixer.music.load("audio/music/cloud-of-sorrow.wav")
-# com o -1 a musica reinicia quando acabar, ou seja ela fica em looping
 pygame.mixer.music.play(-1)
 
 
-# Sprites
+# personagens
 sprite_warrior = pygame.image.load(os.path.join(diretorio_sprites, 'warrior/warrior.png')).convert_alpha()
 sprite_hunter = pygame.image.load(os.path.join(diretorio_sprites, 'hunter/hunter.png')).convert_alpha()
 sprite_wizard = pygame.image.load(os.path.join(diretorio_sprites, 'wizard/wizard.png')).convert_alpha()
 sprite_archer = pygame.image.load(os.path.join(diretorio_sprites, 'archer/archer.png')).convert_alpha()
 sprite_knight = pygame.image.load(os.path.join(diretorio_sprites, 'knight/knight.png')).convert_alpha()
 
+# inimigos
+sprite_darkwarrior = pygame.image.load(os.path.join(diretorio_sprites, 'darkwarrior/darkwarrior.png')).convert_alpha()
+sprite_evilwizard = pygame.image.load(os.path.join(diretorio_sprites, 'evilwizard/evilwizard.png')).convert_alpha()
+sprite_evilwizardfire = pygame.image.load(os.path.join(diretorio_sprites, 'evilwizardfire/evilwizardfire.png')).convert_alpha()
+
+
 todas_as_sprites = pygame.sprite.Group()
+sprite_inimigos = pygame.sprite.Group()
 
 # Instâncias
 
@@ -36,20 +40,30 @@ hunter = Hunter(sprite_hunter)
 warrior = Warrior(sprite_warrior)
 wizard = Wizard(sprite_wizard)
 archer = Archer(sprite_archer)
-knight = Knight(sprite_knight)
+knight = Knight()
 
-# todas_as_sprites.add(wizard)
-# todas_as_sprites.add(hunter)
-# todas_as_sprites.add(warrior)
-# todas_as_sprites.add(archer)
-# todas_as_sprites.add(knight)
+
+darkwarrior = DarkWarrior(sprite_darkwarrior)
+evilwizard = EvilWizard(sprite_evilwizard)
+evilwizardfire = EvilWizardFire(sprite_evilwizardfire)
+cultist = Cultist()
+
 
 
 menu = pygame.image.load("images/fundo/menu.png").convert()
 menu = pygame.transform.scale(menu, (largura, altura))
 
-battle1 = pygame.image.load("images/fundo/Battleground1.png").convert()
+battle1 = pygame.image.load("images/fundo/Battleground1.0.png").convert()
 battle1 = pygame.transform.scale(battle1, (largura, altura))
+
+battle2 = pygame.image.load("images/fundo/Battleground2.0.png").convert()
+battle2 = pygame.transform.scale(battle2, (largura, altura))
+
+battle3 = pygame.image.load("images/fundo/Battleground3.0.png").convert()
+battle3 = pygame.transform.scale(battle3, (largura, altura))
+
+battle4 = pygame.image.load("images/fundo/Battleground4.0.png").convert()
+battle4 = pygame.transform.scale(battle4, (largura, altura))
 
 fundo_best = pygame.image.load("images/fundo/best01.jpg").convert()
 fundo_best = pygame.transform.scale(fundo_best, (largura, altura))
@@ -58,9 +72,7 @@ escolha = pygame.image.load("images/fundo/escolha.png").convert()
 escolha = pygame.transform.scale(escolha, (largura, altura))
 
 
-
 # cores
-
 cor_botao = (0, 0, 0)  # cor preta
 cor_texto = (255, 255, 255)  # cor branca
 
@@ -130,9 +142,6 @@ def cena_menu():
 
         # Atualizar a tela
         pygame.display.flip()
-
-        # Controlar a taxa de atualização
-        # pygame.time.Clock().tick(60)
 
 def cena_escolher_personagem():
     while True:
@@ -204,14 +213,19 @@ def cena_jogar():
                 pygame.quit()
                 sys.exit()
 
-        tela.blit(battle1, (0, 0))
-        # todas_as_sprites.add(warrior)
-        # todas_as_sprites.add(wizard)
-        # todas_as_sprites.add(hunter)
-        # todas_as_sprites.add(archer)
-        # todas_as_sprites.add(knight)
+        tela.blit(battle4, (0, 0))
+        
+        # sprite_inimigos.add(evilwizardfire)
+
+        # sprite_inimigos.add(evilwizard)
+
+        # sprite_inimigos.add(cultist)
+
+        sprite_inimigos.add(darkwarrior)
+        sprite_inimigos.draw(tela)
         todas_as_sprites.draw(tela)
         todas_as_sprites.update()
+        sprite_inimigos.update()
 
         # atualizar a tela
         pygame.display.flip()
