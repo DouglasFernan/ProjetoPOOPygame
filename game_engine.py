@@ -12,8 +12,8 @@ diretorio_sprites = os.path.join(diretorio_principal, 'sprites')
 pygame.mixer.init()
 pygame.init()
 pygame.display.set_caption('Journey')
-largura = 1000
-altura = 550
+largura = 1100
+altura = 600
 tela = pygame.display.set_mode((largura, altura))
 musica_de_fundo = pygame.mixer.music.load("audio/music/cloud-of-sorrow.wav")
 pygame.mixer.music.play(-1)
@@ -43,17 +43,17 @@ todas_as_sprites = pygame.sprite.Group()
 
 # Instâncias
 
-hunter = Hunter(sprite_hunter)
-warrior = Warrior(sprite_warrior)
-wizard = Wizard(sprite_wizard)
-archer = Archer(sprite_archer)
-knight = Knight()
+hunter = Hunter(sprite_hunter, -120, 60)
+warrior = Warrior(sprite_warrior, -100, 100)
+wizard = Wizard(sprite_wizard, -40, 100)
+archer = Archer(sprite_archer, -20, 170)
+knight = Knight(-20, 250)
 
 
-darkwarrior = DarkWarrior(sprite_darkwarrior)
-evilwizard = EvilWizard(sprite_evilwizard)
-evilwizardfire = EvilWizardFire(sprite_evilwizardfire)
-cultist = Cultist()
+# darkwarrior = DarkWarrior(sprite_darkwarrior)
+# evilwizard = EvilWizard(sprite_evilwizard)
+# evilwizardfire = EvilWizardFire(sprite_evilwizardfire)
+# cultist = Cultist()
 
 
 menu = pygame.image.load("images/fundo/menu.png").convert()
@@ -82,29 +82,24 @@ escolha = pygame.transform.scale(escolha, (largura, altura))
 cor_botao = (0, 0, 0)  # cor preta
 cor_texto = (255, 255, 255)  # cor branca
 
-# Configurações do botão "Play"
 play_botao = pygame.Rect(largura // 2 - 100, altura // 2 - 25, 200, 50)
 play_cor = cor_botao
 play_texto = "Play"
 
-# Configurações do botão "Bestiary"
 best_botao = pygame.Rect(largura // 2 - 100, altura // 2 + 50, 200, 50)
 best_cor = cor_botao
 best_texto = "Bestiary"
 
-# Configurações do botão "Exit"
 exit_botao = pygame.Rect(largura // 2 - 100, altura // 2 + 125, 200, 50)
 exit_cor = cor_botao
 exit_texto = "Exit"
 
-# botoes cena escolher personagem
 botao_archer = pygame.Rect(largura // 2 - 100, altura // 2 - 100, 200, 50)
 botao_warrior = pygame.Rect(largura // 2 - 100, altura // 2 - 25, 200, 50)
 botao_hunter = pygame.Rect(largura // 2 - 100, altura // 2 + 50, 200, 50)
 botao_wizard = pygame.Rect(largura // 2 - 100, altura // 2 + 125, 200, 50)
 botao_knight = pygame.Rect(largura // 2 - 100, altura // 2 + 200, 200, 50)
 
-# Configurações do texto
 fonte = pygame.font.Font("fonts/BerkshireSwash-Regular.ttf", 30)
 
 
@@ -112,9 +107,8 @@ class GameEngine:
     def __init__(self):
         self.player = None
         self.dungeon = Dungeon()
-        self.current_floor = 0
-        self.backgrounds = [menu, battle1, battle2,
-                            battle3, battle4, fundo_best, escolha]
+        # self.backgrounds = [menu, battle1, battle2,
+        #                     battle3, battle4, fundo_best, escolha]
         self.current_cena = "menu"
         self.floor_in_progress = False
 
@@ -137,7 +131,7 @@ class GameEngine:
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if play_botao.collidepoint(event.pos):
                         print("clicou em play")
-                        return "escolher_personagem"  # mudar para a cena de jogar
+                        return "escolher_personagem"  
                     elif best_botao.collidepoint(event.pos):
                         pygame.quit()
                         sys.exit()
@@ -146,15 +140,12 @@ class GameEngine:
                         pygame.quit()
                         sys.exit()
 
-            # Preencher a tela
             tela.blit(escolha, (0, 0))
 
-            # Desenhar os botões retangulos
             pygame.draw.rect(tela, play_cor, play_botao)
             pygame.draw.rect(tela, best_cor, best_botao)
             pygame.draw.rect(tela, exit_cor, exit_botao)
 
-            # Adicionar texto nos botões
             play_texto_renderizado = fonte.render(play_texto, True, cor_texto)
             best_texto_renderizado = fonte.render(best_texto, True, cor_texto)
             exit_texto_renderizado = fonte.render(exit_texto, True, cor_texto)
@@ -166,7 +157,6 @@ class GameEngine:
             tela.blit(exit_texto_renderizado, (exit_botao.x + (exit_botao.width - exit_texto_renderizado.get_width()
                                                                ) // 2, exit_botao.y + (exit_botao.height - exit_texto_renderizado.get_height()) // 2))
 
-            # Atualizar a tela
             pygame.display.flip()
 
     def cena_escolher_personagem(self):
@@ -194,20 +184,17 @@ class GameEngine:
 
             tela.blit(escolha, (0, 0))
 
-            # Desenhar o texto
             texto_escolha = fonte.render(
                 "Choose your character", True, cor_botao)
             tela.blit(texto_escolha,
                       ((largura - texto_escolha.get_width()) // 2, 90))
 
-            # Desenhar os botões
             pygame.draw.rect(tela, cor_botao, botao_archer)
             pygame.draw.rect(tela, cor_botao, botao_warrior)
             pygame.draw.rect(tela, cor_botao, botao_hunter)
             pygame.draw.rect(tela, cor_botao, botao_wizard)
             pygame.draw.rect(tela, cor_botao, botao_knight)
 
-            # Adicionar texto nos botões
             texto_archer = fonte.render("Archer", True, cor_texto)
             texto_warrior = fonte.render("Warrior", True, cor_texto)
             texto_hunter = fonte.render("Hunter", True, cor_texto)
@@ -225,42 +212,44 @@ class GameEngine:
             tela.blit(texto_knight, (botao_knight.x + (botao_knight.width - texto_knight.get_width()) // 2,
                                      botao_knight.y + (botao_knight.height - texto_knight.get_height()) // 2))
 
-            # Atualizar a tela
             pygame.display.flip()
 
-            # Controlar a taxa de atualização
             pygame.time.Clock().tick(60)
 
     def cena_jogar(self):
 
         relogio = pygame.time.Clock()
+        FPS = 30
 
-        # Inicialize o sprite_inimigos com o inimigo do primeiro andar
+        # sprite_inimigos com o inimigo do primeiro andar
         sprite_inimigos = pygame.sprite.Group()
         self.dungeon.get_current_floor().create_enemy(sprite_inimigos)
 
         while True:
-            relogio.tick(20)
+            relogio.tick(FPS)
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.quit()
                     sys.exit()
 
-            # Desenhe a imagem de fundo do andar atual
             tela.blit(self.dungeon.get_current_floor().image, (0, 0))
 
-            # Desenhe os elementos na tela
             todas_as_sprites.draw(tela)
-
-            # Verifique se o monstro foi derrotado
+                
+                
             if not sprite_inimigos:
-                # Se não houver mais inimigos, avance para o próximo andar
                 if self.dungeon.advance_to_next_floor():
-                    # Atualize a imagem de fundo
                     tela.blit(self.dungeon.get_current_floor().image, (0, 0))
-                    # Recrie os inimigos para o novo andar
-                    sprite_inimigos = pygame.sprite.Group()  # Limpe os inimigos anteriores
+                    # cria os inimigos para o novo andar
+                    sprite_inimigos = pygame.sprite.Group()  
                     self.dungeon.get_current_floor().create_enemy(sprite_inimigos)
+
+
+            current_enemy = self.dungeon.get_current_floor().get_current_enemy()
+            # esse for não tinha esperança de dar certo, mas deu, puthon é surreal kkkkkkk
+            for i in todas_as_sprites:
+                i.move(tela, current_enemy)
+
 
             sprite_inimigos.draw(tela)
             sprite_inimigos.update()
@@ -278,17 +267,16 @@ class Dungeon:
                        Floor("Floor 2", battle2, "EvilWizardFire"),
                        Floor("Floor 3", battle3, "Cultist"),
                        Floor("Floor 4", battle4, "DarkWarrior")]
-        self.current_floor = 0
+        self.current_floor = 3
 
     def get_current_floor(self):
         if 0 <= self.current_floor < len(self.floors):
             return self.floors[self.current_floor]
         else:
-            # Se o andar atual estiver fora dos limites, retorne None ou tome outra ação
             return None
 
-    def advance_to_next_floor(self):
-        # Verifica se há um próximo andar disponível
+    def to_next_floor(self):
+        # verifica se há um próximo andar disponível
         if self.current_floor + 1 < len(self.floors):
             self.current_floor += 1
             return True
@@ -301,9 +289,9 @@ class Floor:
         self.name = name
         self.image = image
         self.enemy_type = enemy_type
+        self.current_enemy = None
 
     def create_enemy(self, group):
-        # Crie uma instância do tipo de inimigo associado ao andar
         if self.enemy_type == "EvilWizard":
             enemy = EvilWizard(sprite_evilwizard)
         elif self.enemy_type == "EvilWizardFire":
@@ -315,13 +303,13 @@ class Floor:
         else:
             enemy = None
 
-        # Adicione o inimigo ao grupo de sprites
         if enemy:
             group.add(enemy)
-
-        # Retorne o inimigo criado
+            self.current_enemy = enemy
         return enemy
-
+    
+    def get_current_enemy(self):
+        return self.current_enemy
 
 run = GameEngine()
 run.run()
