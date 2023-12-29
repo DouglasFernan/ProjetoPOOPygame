@@ -195,7 +195,10 @@ class Knight(Personagem, pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.vel_y = 0
         self.jump = False
+        self.attacking = False
         self.attack_type = 0
+        self.health = 100
+        self.power = 13
         self.sprites = []
         self.sprites.append(pygame.image.load(
             "sprites/knight/HeroKnight_Idle_0.png"))
@@ -234,22 +237,30 @@ class Knight(Personagem, pygame.sprite.Sprite):
 
         # press teclas
         key = pygame.key.get_pressed()
+        
+        # só realiza ações se não estiver atacando
+        if self.attacking == False:
+            # movimento
+            if key[pygame.K_a]:
+                dx = - SPEED
+            if key[pygame.K_d]:
+                dx = SPEED
+            # pulo
+            if key[pygame.K_w] and self.jump == False:
+                self.vel_y = -30
+                self.jump = True
+            # atacar
+            if key[pygame.K_m]:
+                self.attack_type = 1
+                self.attack(surface, target)
+                # se tiver mais de um ataque:
+                # if key[pygame.K_m]:
+                #     self.attack_type =1
+                # if key[pygame.K_n]:
+                #     self.attack_type =2
 
-        # movimento
-        if key[pygame.K_a]:
-            dx = - SPEED
-        if key[pygame.K_d]:
-            dx = SPEED
-
-        # pulo
-        if key[pygame.K_w] and self.jump == False:
-            self.vel_y = -30
-            self.jump = True
             
-        # atacar
-        if key[pygame.K_m]:
-            self.attack_type = 1
-            self.attack(surface, target)
+            
         # aplicar gravidade
         self.vel_y += GRAVITY
         dy += self.vel_y
@@ -270,9 +281,12 @@ class Knight(Personagem, pygame.sprite.Sprite):
         self.rect.y += dy
 
     def attack(self, surface, target):
+        self.attacking = True
         attacking_rect = pygame.Rect(self.rect.centerx, self.rect.y, self.rect.width, self.rect.height) #coordenada x, y, largura e altura. será o alcance do ataque
         if attacking_rect.colliderect(target.rect):
-            print("hit")
-        
+            dano = self.power
+            target.health -= dano   
+            print('hit')
         
         pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
+        self.attacking = False

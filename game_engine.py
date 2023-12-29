@@ -79,8 +79,14 @@ escolha = pygame.transform.scale(escolha, (largura, altura))
 
 
 # cores
-cor_botao = (0, 0, 0)  # cor preta
-cor_texto = (255, 255, 255)  # cor branca
+
+black = (0, 0, 0) # cor preta
+white = (255, 255, 255) # cor branca
+yellow = (255, 255, 0)  # cor amarela
+red = (255, 0, 0) # cor vermelha
+
+cor_botao = black
+cor_texto = white  
 
 play_botao = pygame.Rect(largura // 2 - 100, altura // 2 - 25, 200, 50)
 play_cor = cor_botao
@@ -131,7 +137,7 @@ class GameEngine:
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if play_botao.collidepoint(event.pos):
                         print("clicou em play")
-                        return "escolher_personagem"  
+                        return "escolher_personagem"
                     elif best_botao.collidepoint(event.pos):
                         pygame.quit()
                         sys.exit()
@@ -220,6 +226,8 @@ class GameEngine:
 
         relogio = pygame.time.Clock()
         FPS = 30
+        
+        
 
         # sprite_inimigos com o inimigo do primeiro andar
         sprite_inimigos = pygame.sprite.Group()
@@ -235,21 +243,24 @@ class GameEngine:
             tela.blit(self.dungeon.get_current_floor().image, (0, 0))
 
             todas_as_sprites.draw(tela)
-                
-                
+
             if not sprite_inimigos:
                 if self.dungeon.advance_to_next_floor():
                     tela.blit(self.dungeon.get_current_floor().image, (0, 0))
                     # cria os inimigos para o novo andar
-                    sprite_inimigos = pygame.sprite.Group()  
+                    sprite_inimigos = pygame.sprite.Group()
                     self.dungeon.get_current_floor().create_enemy(sprite_inimigos)
 
-
-            current_enemy = self.dungeon.get_current_floor().get_current_enemy()
             # esse for não tinha esperança de dar certo, mas deu, puthon é surreal kkkkkkk
             for i in todas_as_sprites:
-                i.move(tela, current_enemy)
-
+                i.move(tela, self.dungeon.get_current_floor().get_current_enemy())
+                
+                if isinstance(i,(Archer, Warrior, Hunter, Wizard, Knight)):
+                    current_player = i  
+                    
+                    
+                self.draw_health_bar(current_player.health, 20, 20)  
+                self.draw_health_bar(self.dungeon.get_current_floor().get_current_enemy().health, 680, 20)
 
             sprite_inimigos.draw(tela)
             sprite_inimigos.update()
@@ -259,6 +270,12 @@ class GameEngine:
     def next_floor(self):
         self.current_floor += 1
         self.floor_in_progress = False
+
+    def draw_health_bar(self, health, x, y):
+        ratio = health / 100
+        pygame.draw.rect(tela, white, (x - 4, y - 4, 408, 38))
+        pygame.draw.rect(tela, red, (x, y, 400, 30))
+        pygame.draw.rect(tela, yellow, (x, y, 400 * ratio, 30))
 
 
 class Dungeon:
@@ -307,9 +324,10 @@ class Floor:
             group.add(enemy)
             self.current_enemy = enemy
         return enemy
-    
+
     def get_current_enemy(self):
         return self.current_enemy
+
 
 run = GameEngine()
 run.run()
