@@ -27,8 +27,7 @@ sprite_wizard = pygame.image.load(os.path.join(
     diretorio_sprites, 'wizard/wizard.png')).convert_alpha()
 sprite_archer = pygame.image.load(os.path.join(
     diretorio_sprites, 'archer/archer.png')).convert_alpha()
-sprite_knight = pygame.image.load(os.path.join(
-    diretorio_sprites, 'knight/knight.png')).convert_alpha()
+
 
 # inimigos
 sprite_darkwarrior = pygame.image.load(os.path.join(
@@ -253,14 +252,18 @@ class GameEngine:
 
             # esse for não tinha esperança de dar certo, mas deu, puthon é surreal kkkkkkk
             for i in todas_as_sprites:
-                i.move(tela, self.dungeon.get_current_floor().get_current_enemy())
+                i.move(tela, self.current_enemy())
                 
                 if isinstance(i,(Archer, Warrior, Hunter, Wizard, Knight)):
                     current_player = i  
                     
                     
                 self.draw_health_bar(current_player.health, 20, 20)  
-                self.draw_health_bar(self.dungeon.get_current_floor().get_current_enemy().health, 680, 20)
+                self.draw_health_bar(self.current_enemy().health, 680, 20)
+
+            if self.current_enemy().alive() == False:
+                self.dungeon.current_floor += 1
+                self.next_floor()
 
             sprite_inimigos.draw(tela)
             sprite_inimigos.update()
@@ -268,9 +271,14 @@ class GameEngine:
             pygame.display.flip()
 
     def next_floor(self):
-        self.current_floor += 1
-        self.floor_in_progress = False
-
+        if self.dungeon.current_floor <= 3:
+            self.cena_jogar()
+        elif self.dungeon.current_floor > 3:
+            pygame.quit()
+            sys.exit()
+        else:
+            return None
+            
     def draw_health_bar(self, health, x, y):
         ratio = health / 100
         pygame.draw.rect(tela, white, (x - 4, y - 4, 408, 38))
@@ -278,13 +286,16 @@ class GameEngine:
         pygame.draw.rect(tela, yellow, (x, y, 400 * ratio, 30))
 
 
+    def current_enemy(self):
+        return self.dungeon.get_current_floor().get_current_enemy()
+
 class Dungeon:
     def __init__(self):
         self.floors = [Floor("Floor 1", battle1, "EvilWizard"),
                        Floor("Floor 2", battle2, "EvilWizardFire"),
                        Floor("Floor 3", battle3, "Cultist"),
                        Floor("Floor 4", battle4, "DarkWarrior")]
-        self.current_floor = 3
+        self.current_floor = 0
 
     def get_current_floor(self):
         if 0 <= self.current_floor < len(self.floors):
