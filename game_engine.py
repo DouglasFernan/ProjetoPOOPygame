@@ -27,8 +27,7 @@ sprite_wizard = pygame.image.load(os.path.join(
     diretorio_sprites, 'wizard/wizard.png')).convert_alpha()
 sprite_archer = pygame.image.load(os.path.join(
     diretorio_sprites, 'archer/archer.png')).convert_alpha()
-sprite_knight = pygame.image.load(os.path.join(
-    diretorio_sprites, 'knight/knight.png')).convert_alpha()
+
 
 # inimigos
 sprite_darkwarrior = pygame.image.load(os.path.join(

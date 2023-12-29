@@ -51,6 +51,7 @@ class DarkWarrior(Inimigo, pygame.sprite.Sprite):
 class EvilWizard(Inimigo, pygame.sprite.Sprite):
     def __init__(self, sprite):
         pygame.sprite.Sprite.__init__(self)
+        self.health = 100
         self.sprites = []
         for i in range(8):
             img = sprite.subsurface((i * 250, 0), (250, 250))
@@ -69,13 +70,20 @@ class EvilWizard(Inimigo, pygame.sprite.Sprite):
         self.image = self.sprites[int(self.index_lista)]
         self.image = pygame.transform.flip(self.image, True, False)
 
-    def ataque_basico(self, alvo):
-        pass
-
+    def attack(self, surface, target):
+        self.attacking = True
+        attacking_rect = pygame.Rect(self.rect.centerx, self.rect.y, self.rect.width, self.rect.height) #coordenada x, y, largura e altura. será o alcance do ataque
+        if attacking_rect.colliderect(target.rect):
+            dano = self.power
+            target.health = - dano     
+        
+        pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
+        self.attacking = False
 
 class EvilWizardFire(Inimigo, pygame.sprite.Sprite):
     def __init__(self, sprite):
         pygame.sprite.Sprite.__init__(self)
+        self.health = 100
         self.sprites = []
         for i in range(8):
             img = sprite.subsurface((i * 150, 0), (150, 150))
@@ -94,13 +102,20 @@ class EvilWizardFire(Inimigo, pygame.sprite.Sprite):
         self.image = self.sprites[int(self.index_lista)]
         self.image = pygame.transform.flip(self.image, True, False)
 
-    def ataque_basico(self, alvo):
-        pass
-
+    def attack(self, surface, target):
+        self.attacking = True
+        attacking_rect = pygame.Rect(self.rect.centerx, self.rect.y, self.rect.width, self.rect.height) #coordenada x, y, largura e altura. será o alcance do ataque
+        if attacking_rect.colliderect(target.rect):
+            dano = self.power
+            target.health = - dano     
+        
+        pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
+        self.attacking = False
 
 class Cultist(Inimigo, pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
+        self.health = 100
         self.sprites = []
         self.sprites.append(pygame.image.load(
             "sprites/cultist/cultist_priest_idle_1.png"))
@@ -126,5 +141,12 @@ class Cultist(Inimigo, pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (200*1.5, 200*1.5))
         self.image = pygame.transform.flip(self.image, True, False)
 
-    def ataque_basico(self, alvo):
-        pass
+    def attack(self, surface, target):
+        self.attacking = True
+        attacking_rect = pygame.Rect(self.rect.centerx, self.rect.y, self.rect.width, self.rect.height) #coordenada x, y, largura e altura. será o alcance do ataque
+        if attacking_rect.colliderect(target.rect):
+            dano = self.power
+            target.health = - dano     
+        
+        pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
+        self.attacking = False
