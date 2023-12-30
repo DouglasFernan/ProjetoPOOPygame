@@ -99,7 +99,7 @@ class Wizard(Personagem, pygame.sprite.Sprite):
 
     def attack(self, surface, target):
         self.attacking = True
-        attacking_rect = pygame.Rect(self.rect.centerx, self.rect.y, self.rect.width * 0.5, self.rect.height) #coordenada x, y, largura e altura. será o alcance do ataque
+        attacking_rect = pygame.Rect(self.rect.centerx, self.rect.y, self.rect.width * 0.2, self.rect.height) #coordenada x, y, largura e altura. será o alcance do ataque
         if attacking_rect.colliderect(target.rect):
             dano = self.power
             target.health -= dano   
