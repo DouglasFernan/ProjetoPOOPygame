@@ -78,6 +78,7 @@ class EvilWizard(Inimigo, pygame.sprite.Sprite):
         self.index_lista += 0.50
         self.image = self.sprites[int(self.index_lista)]
         self.image = pygame.transform.flip(self.image, True, False)
+        self.update_cooldown()
 
     def update_cooldown(self):
         if self.cooldown > 0:
