@@ -283,7 +283,7 @@ class Dungeon:
                        Floor("Floor 2", battle2, "EvilWizardFire"),
                        Floor("Floor 3", battle3, "Cultist"),
                        Floor("Floor 4", battle4, "DarkWarrior")]
-        self.current_floor = 3
+        self.current_floor = 0
 
     def get_current_floor(self):
         if 0 <= self.current_floor < len(self.floors):
