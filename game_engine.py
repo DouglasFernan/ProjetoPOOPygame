@@ -127,6 +127,7 @@ class GameEngine:
             elif self.current_cena == "escolher_personagem":
                 self.current_cena = self.cena_escolher_personagem()
 
+
     def cena_menu(self):
         while True:
             for event in pygame.event.get():
@@ -241,7 +242,6 @@ class GameEngine:
 
             tela.blit(self.dungeon.get_current_floor().image, (0, 0))
 
-            todas_as_sprites.draw(tela)
 
             if not sprite_inimigos:
                 if self.dungeon.advance_to_next_floor():
@@ -265,10 +265,11 @@ class GameEngine:
                 self.dungeon.current_floor += 1
                 self.next_floor()
 
+            todas_as_sprites.draw(tela)
             sprite_inimigos.draw(tela)
             sprite_inimigos.update()
             todas_as_sprites.update()
-            pygame.display.flip()
+
 
     def next_floor(self):
         if self.dungeon.current_floor <= 3:

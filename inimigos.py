@@ -1,5 +1,5 @@
 import pygame
-
+import random
 
 class Inimigo:                    # Inimigo pai
     def __init__(self):
@@ -59,6 +59,8 @@ class EvilWizard(Inimigo, pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.health = 100
         self.is_alive = True
+        self.cooldown = 0
+        self.attack_cooldown_duration = random.randint(30, 60)
         self.sprites = []
         for i in range(8):
             img = sprite.subsurface((i * 250, 0), (250, 250))
@@ -77,16 +79,19 @@ class EvilWizard(Inimigo, pygame.sprite.Sprite):
         self.image = self.sprites[int(self.index_lista)]
         self.image = pygame.transform.flip(self.image, True, False)
 
-    def attack(self, surface, target):
-        self.attacking = True
-        attacking_rect = pygame.Rect(self.rect.centerx, self.rect.y, self.rect.width, self.rect.height) #coordenada x, y, largura e altura. será o alcance do ataque
-        if attacking_rect.colliderect(target.rect):
-            dano = self.power
-            target.health = - dano     
-        
-        pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
-        self.attacking = False
+    def update_cooldown(self):
+        if self.cooldown > 0:
+            self.cooldown -= 1
+        else:
+            # Atualiza o cooldown aleatório após o ataque
+            self.attack_cooldown_duration = random.randint(30, 60)
 
+    def auto_attack(self, surface, target):
+        # Verifica se pode atacar com base no cooldown
+        if self.pode_atacar():
+            self.attack(surface, target)
+            # Reinicia o cooldown
+            self.cooldown = self.attack_cooldown_duration
 
     def alive(self):
         if self.health <= 0:
