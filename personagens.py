@@ -12,6 +12,7 @@ class Personagem:                # Personagem pai
         self._maxVida = self._vida
         self._descricao = ''
         self._xp = 0
+        
 
     def ataque_basico(self, alvo):
         pass

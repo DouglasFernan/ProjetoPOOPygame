@@ -49,6 +49,7 @@ archer = Archer(sprite_archer, -20, 170)
 knight = Knight(-20, 250)
 
 
+
 # darkwarrior = DarkWarrior(sprite_darkwarrior)
 # evilwizard = EvilWizard(sprite_evilwizard)
 # evilwizardfire = EvilWizardFire(sprite_evilwizardfire)

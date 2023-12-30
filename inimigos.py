@@ -100,6 +100,7 @@ class EvilWizard(Inimigo, pygame.sprite.Sprite):
             self.is_alive = False
             return False
 
+
 class EvilWizardFire(Inimigo, pygame.sprite.Sprite):
     def __init__(self, sprite):
         pygame.sprite.Sprite.__init__(self)
