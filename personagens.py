@@ -26,7 +26,9 @@ class Wizard(Personagem, pygame.sprite.Sprite):
         self.attacking = False
         self.attack_type = 0
         self.health = 100
-        self.power = 13
+        self.power = 3
+        self.cooldown = 0
+        self.cooldown_duration = 10
         self.sprites = []
         for i in range(6):
             img = sprite.subsurface((i * 231, 0), (231, 190))
@@ -44,8 +46,15 @@ class Wizard(Personagem, pygame.sprite.Sprite):
             self.index_lista = 0
         self.index_lista += 0.25
         self.image = self.sprites[int(self.index_lista)]
+        self.update_cooldown()
 
+    def update_cooldown(self):
+        if self.cooldown > 0:
+            self.cooldown -= 1
 
+    def pode_atacar(self):
+        return self.cooldown <= 0
+    
     def move(self, surface, target):
         SPEED = 10
         GRAVITY = 2
@@ -98,15 +107,18 @@ class Wizard(Personagem, pygame.sprite.Sprite):
         self.rect.y += dy
 
     def attack(self, surface, target):
-        self.attacking = True
         attacking_rect = pygame.Rect(self.rect.centerx, self.rect.y, self.rect.width * 0.3, self.rect.height) #coordenada x, y, largura e altura. será o alcance do ataque
-        if attacking_rect.colliderect(target.rect):
-            dano = self.power
-            target.health -= dano   
-            print('hit')
-        
-        pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
-        self.attacking = False
+        if self.pode_atacar():
+            if attacking_rect.colliderect(target.rect):
+                dano = self.power
+                target.health -= dano   
+                print('hit')
+                self.cooldown = self.cooldown_duration
+            else: 
+                print('não acertou')
+                self.cooldown = self.cooldown_duration
+            
+            pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
 
 
 class Warrior(Personagem, pygame.sprite.Sprite):
@@ -118,7 +130,9 @@ class Warrior(Personagem, pygame.sprite.Sprite):
         self.attacking = False
         self.attack_type = 0
         self.health = 100
-        self.power = 13
+        self.power = 2.5
+        self.cooldown = 0
+        self.cooldown_duration = 10
         for i in range(10):
             img = sprite.subsurface((i * 135, 0), (135, 135))
             img = pygame.transform.scale(img, (135 * 4, 135*4))
@@ -134,7 +148,16 @@ class Warrior(Personagem, pygame.sprite.Sprite):
             self.index_lista = 0
         self.index_lista += 0.50
         self.image = self.sprites[int(self.index_lista)]
+        self.update_cooldown()
 
+    def update_cooldown(self):
+        if self.cooldown > 0:
+            self.cooldown -= 1
+
+    def pode_atacar(self):
+        return self.cooldown <= 0
+    
+    
     def move(self, surface, target):
         SPEED = 10
         GRAVITY = 2
@@ -187,15 +210,18 @@ class Warrior(Personagem, pygame.sprite.Sprite):
         self.rect.y += dy
 
     def attack(self, surface, target):
-        self.attacking = True
         attacking_rect = pygame.Rect(self.rect.centerx, self.rect.y, self.rect.width * 0.2, self.rect.height) #coordenada x, y, largura e altura. será o alcance do ataque
-        if attacking_rect.colliderect(target.rect):
-            dano = self.power
-            target.health -= dano   
-            print('hit')
-        
+        if self.pode_atacar():
+            if attacking_rect.colliderect(target.rect):
+                dano = self.power
+                target.health -= dano   
+                print('hit')
+                self.cooldown = self.cooldown_duration
+            else: 
+                print('não acertou')
+                self.cooldown = self.cooldown_duration
+
         pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
-        self.attacking = False
 
 
 class Hunter(Personagem, pygame.sprite.Sprite):
@@ -207,7 +233,9 @@ class Hunter(Personagem, pygame.sprite.Sprite):
         self.attacking = False
         self.attack_type = 0
         self.health = 100
-        self.power = 13
+        self.power = 2
+        self.cooldown = 0
+        self.cooldown_duration = 10
         for i in range(8):
             img = sprite.subsurface((i * 150, 0), (150, 150))
             img = pygame.transform.scale(img, (150 * int(4.5), 150 * int(4.5)))
@@ -223,7 +251,15 @@ class Hunter(Personagem, pygame.sprite.Sprite):
             self.index_lista = 0
         self.index_lista += 0.50
         self.image = self.sprites[int(self.index_lista)]
+        self.update_cooldown()
 
+    def update_cooldown(self):
+        if self.cooldown > 0:
+            self.cooldown -= 1
+
+    def pode_atacar(self):
+        return self.cooldown <= 0
+    
     def move(self, surface, target):
         SPEED = 10
         GRAVITY = 2
@@ -276,15 +312,18 @@ class Hunter(Personagem, pygame.sprite.Sprite):
         self.rect.y += dy
 
     def attack(self, surface, target):
-        self.attacking = True
         attacking_rect = pygame.Rect(self.rect.centerx, self.rect.y, self.rect.width * 0.2, self.rect.height) #coordenada x, y, largura e altura. será o alcance do ataque
-        if attacking_rect.colliderect(target.rect):
-            dano = self.power
-            target.health -= dano   
-            print('hit')
-        
+        if self.pode_atacar():
+            if attacking_rect.colliderect(target.rect):
+                dano = self.power
+                target.health -= dano   
+                print('hit')
+                self.cooldown = self.cooldown_duration
+            else:
+                print('não acertou')
+                self.cooldown = self.cooldown_duration
+
         pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
-        self.attacking = False
 
 
 class Archer(Personagem, pygame.sprite.Sprite):
@@ -296,7 +335,9 @@ class Archer(Personagem, pygame.sprite.Sprite):
         self.attacking = False
         self.attack_type = 0
         self.health = 100
-        self.power = 13
+        self.power = 2
+        self.cooldown = 0
+        self.cooldown_duration = 10
         for i in range(10):
             img = sprite.subsurface((i * 100, 0), (100, 100))
             img = pygame.transform.scale(img, (100 * int(4.5), 100 * int(4.5)))
@@ -312,7 +353,15 @@ class Archer(Personagem, pygame.sprite.Sprite):
             self.index_lista = 0
         self.index_lista += 0.50
         self.image = self.sprites[int(self.index_lista)]
+        self.update_cooldown()
 
+    def update_cooldown(self):
+        if self.cooldown > 0:
+            self.cooldown -= 1
+
+    def pode_atacar(self):
+        return self.cooldown <= 0
+    
     def move(self, surface, target):
         SPEED = 10
         GRAVITY = 2
@@ -367,11 +416,16 @@ class Archer(Personagem, pygame.sprite.Sprite):
     def attack(self, surface, target):
         self.attacking = True
         attacking_rect = pygame.Rect(self.rect.centerx, self.rect.y, self.rect.width * 0.3, self.rect.height) #coordenada x, y, largura e altura. será o alcance do ataque
-        if attacking_rect.colliderect(target.rect):
-            dano = self.power
-            target.health -= dano   
-            print('hit')
-        
+        if self.pode_atacar():
+            if attacking_rect.colliderect(target.rect):
+                dano = self.power
+                target.health -= dano   
+                print('hit')
+                self.cooldown = self.cooldown_duration
+            else:
+                print('não acertou')
+                self.cooldown = self.cooldown_duration
+            
         pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
         self.attacking = False
 
@@ -384,7 +438,9 @@ class Knight(Personagem, pygame.sprite.Sprite):
         self.attacking = False
         self.attack_type = 0
         self.health = 100
-        self.power = 13
+        self.power = 2.3
+        self.cooldown = 0
+        self.cooldown_duration = 10
         self.sprites = []
         self.sprites.append(pygame.image.load(
             "sprites/knight/HeroKnight_Idle_0.png"))
@@ -414,7 +470,15 @@ class Knight(Personagem, pygame.sprite.Sprite):
             self.atual = 0
         self.image = self.sprites[int(self.atual)]
         self.image = pygame.transform.scale(self.image, (100*4, 55*4))
+        self.update_cooldown()
 
+    def update_cooldown(self):
+        if self.cooldown > 0:
+            self.cooldown -= 1
+
+    def pode_atacar(self):
+        return self.cooldown <= 0
+    
     def move(self, surface, target):
         SPEED = 10
         GRAVITY = 2
@@ -467,12 +531,15 @@ class Knight(Personagem, pygame.sprite.Sprite):
         self.rect.y += dy
 
     def attack(self, surface, target):
-        self.attacking = True
         attacking_rect = pygame.Rect(self.rect.centerx, self.rect.y, self.rect.width, self.rect.height) #coordenada x, y, largura e altura. será o alcance do ataque
-        if attacking_rect.colliderect(target.rect):
-            dano = self.power
-            target.health -= dano   
-            print('hit')
-        
+        if self.pode_atacar():
+            if attacking_rect.colliderect(target.rect):
+                dano = self.power
+                target.health -= dano   
+                print('hit')
+                self.cooldown = self.cooldown_duration
+            else: 
+                print('não acertou')
+                self.cooldown = self.cooldown_duration
+
         pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
-        self.attacking = False
