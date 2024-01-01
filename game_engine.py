@@ -119,7 +119,10 @@ class GameEngine:
         self.floor_in_progress = False
 
     def run(self):
-
+        """
+        basicamente, é o loop principal, onde troca de uma cena para a outra
+        dependendo das escolhas do usuario
+        """
         while True:
             if self.current_cena == "menu":
                 self.current_cena = self.cena_menu()
@@ -130,6 +133,10 @@ class GameEngine:
 
 
     def cena_menu(self):
+        """
+        função onde é desenhada na tela a cena do menu principal
+        contando com play e exit
+        """
         while True:
             for event in pygame.event.get():
                 if event.type == QUIT:
@@ -167,6 +174,11 @@ class GameEngine:
             pygame.display.flip()
 
     def cena_escolher_personagem(self):
+        """
+        cena que é desenhada na tela logo após o usuário apertar em "play"
+        aqui, será possivel escolher entre os personagens que o usuário
+        deseja utilizar no game
+        """
         while True:
             for event in pygame.event.get():
                 if event.type == QUIT:
@@ -224,12 +236,19 @@ class GameEngine:
             pygame.time.Clock().tick(60)
 
     def cena_jogar(self):
-
+        """
+        nessa cena, é quando o usuário já escolheu seu personagem e ele é desenhado
+        na tela, começando o game no primeiro Floor, com seu inimigo específico
+        """
+        battle_music = pygame.mixer.music.load("audio/music/battle-of-the-dragons.wav")
+        pygame.mixer.music.play(-1)
+        
         relogio = pygame.time.Clock()
         FPS = 30
         
+        battle_music = pygame.mixer.music.load("audio/music/battle-of-the-dragons.wav")
+        pygame.mixer.music.play(-1)
         
-
         # sprite_inimigos com o inimigo do primeiro andar
         sprite_inimigos = pygame.sprite.Group()
         self.dungeon.get_current_floor().create_enemy(sprite_inimigos)
@@ -254,7 +273,7 @@ class GameEngine:
             # esse for não tinha esperança de dar certo, mas deu, puthon é surreal kkkkkkk
             for i in todas_as_sprites:
                 i.move(tela, self.current_enemy())
-                
+                self.current_enemy().auto_attack(tela, i)
                 if isinstance(i,(Archer, Warrior, Hunter, Wizard, Knight)):
                     current_player = i  
                     
@@ -270,9 +289,14 @@ class GameEngine:
             sprite_inimigos.draw(tela)
             sprite_inimigos.update()
             todas_as_sprites.update()
+            pygame.display.flip() # atualiza a tela
 
 
     def next_floor(self):
+        """
+        essa função verifica se o Floor não ultrapassou o numero existente de Floors,
+        então chama novamente a função cena_jogar()
+        """
         if self.dungeon.current_floor <= 3:
             self.cena_jogar()
         elif self.dungeon.current_floor > 3:
@@ -282,6 +306,9 @@ class GameEngine:
             return None
             
     def draw_health_bar(self, health, x, y):
+        """
+        desenha as barras de saúde do personagem e do inimigo na tela
+        """
         ratio = health / 100
         pygame.draw.rect(tela, white, (x - 4, y - 4, 408, 38))
         pygame.draw.rect(tela, red, (x, y, 400, 30))
