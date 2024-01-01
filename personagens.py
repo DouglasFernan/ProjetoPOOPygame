@@ -38,6 +38,9 @@ class Wizard(Personagem, pygame.sprite.Sprite):
         self.rect.topleft = (x, y)
         self.life = 100
 
+    def __str__(self):
+        return "Wizard"
+
     def update(self):
         if self.index_lista > 5:
             self.index_lista = 0
@@ -139,6 +142,10 @@ class Warrior(Personagem, pygame.sprite.Sprite):
         self.image = self.sprites[self.index_lista]
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
+
+    def __str__(self):
+        return "Warrior"
+
 
     def update(self):
         if self.index_lista > 9:
@@ -243,6 +250,10 @@ class Hunter(Personagem, pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)  # -120, 60
 
+    def __str__(self):
+        return "Hunter"
+
+
     def update(self):
         if self.index_lista > 7:
             self.index_lista = 0
@@ -323,109 +334,6 @@ class Hunter(Personagem, pygame.sprite.Sprite):
         pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
 
 
-class Archer(Personagem, pygame.sprite.Sprite):
-    def __init__(self, sprite, x, y):
-        pygame.sprite.Sprite.__init__(self)
-        self.sprites = []
-        self.vel_y = 0
-        self.jump = False
-        self.attacking = False
-        self.attack_type = 0
-        self.health = 100
-        self.power = 2
-        self.cooldown = 0
-        self.cooldown_duration = 10
-        for i in range(10):
-            img = sprite.subsurface((i * 100, 0), (100, 100))
-            img = pygame.transform.scale(img, (100 * int(4.5), 100 * int(4.5)))
-            self.sprites.append(img)
-
-        self.index_lista = 0
-        self.image = self.sprites[self.index_lista]
-        self.rect = self.image.get_rect()
-        self.rect.topleft = (x, y)
-
-    def update(self):
-        if self.index_lista > 9:
-            self.index_lista = 0
-        self.index_lista += 0.50
-        self.image = self.sprites[int(self.index_lista)]
-        self.update_cooldown()
-
-    def update_cooldown(self):
-        if self.cooldown > 0:
-            self.cooldown -= 1
-
-    def pode_atacar(self):
-        return self.cooldown <= 0
-    
-    def move(self, surface, target):
-        SPEED = 10
-        GRAVITY = 2
-        dx = 0  # (direction x) nada muda, posição do jogador está parada
-        dy = 0
-
-        # press teclas
-        key = pygame.key.get_pressed()
-        
-        # só realiza ações se não estiver atacando
-        if self.attacking == False:
-            # movimento
-            if key[pygame.K_a]:
-                dx = - SPEED
-            if key[pygame.K_d]:
-                dx = SPEED
-            # pulo
-            if key[pygame.K_w] and self.jump == False:
-                self.vel_y = -30
-                self.jump = True
-            # atacar
-            if key[pygame.K_m]:
-                self.attack_type = 1
-                self.attack(surface, target)
-                # se tiver mais de um ataque:
-                # if key[pygame.K_m]:
-                #     self.attack_type =1
-                # if key[pygame.K_n]:
-                #     self.attack_type =2
-
-            
-            
-        # aplicar gravidade
-        self.vel_y += GRAVITY
-        dy += self.vel_y
-
-        # permanacer na tela
-        if self.rect.left + dx < 0:
-            dx = - self.rect.left
-        if self.rect.right + dx > 950:
-            dx = 950 - self.rect.right
-
-        if self.rect.bottom + dy > 600 - 0:
-            self.vel_y = 0
-            self.jump = False
-            dy = 600 - 0 - self.rect.bottom
-
-        # update position
-        self.rect.x += dx
-        self.rect.y += dy
-
-    def attack(self, surface, target):
-        self.attacking = True
-        attacking_rect = pygame.Rect(self.rect.centerx, self.rect.y, self.rect.width * 0.3, self.rect.height) #coordenada x, y, largura e altura. será o alcance do ataque
-        if self.pode_atacar():
-            if attacking_rect.colliderect(target.rect):
-                dano = self.power
-                target.health -= dano   
-                print('hit')
-                self.cooldown = self.cooldown_duration
-            else:
-                print('não acertou')
-                self.cooldown = self.cooldown_duration
-            
-        pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
-        self.attacking = False
-
 
 class Knight(Personagem, pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -460,6 +368,10 @@ class Knight(Personagem, pygame.sprite.Sprite):
 
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
+
+    def __str__(self):
+        return "Knight"
+
 
     def update(self):
         self.atual = self.atual + 0.5
@@ -506,8 +418,6 @@ class Knight(Personagem, pygame.sprite.Sprite):
                 # if key[pygame.K_n]:
                 #     self.attack_type =2
 
-            
-            
         # aplicar gravidade
         self.vel_y += GRAVITY
         dy += self.vel_y

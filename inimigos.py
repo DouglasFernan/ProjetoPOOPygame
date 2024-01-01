@@ -58,7 +58,7 @@ class DarkWarrior(Inimigo, pygame.sprite.Sprite):
     def attack(self, surface, target):
         # coordenada x, y, largura e altura. será o alcance do ataque
         attacking_rect = pygame.Rect(
-            self.rect.centerx, self.rect.y, self.rect.width * -3, self.rect.height)
+            self.rect.centerx, self.rect.y, self.rect.width * -1, self.rect.height)
         if self.pode_atacar():
             if attacking_rect.colliderect(target.rect):
                 dano = self.power
@@ -123,7 +123,7 @@ class EvilWizard(Inimigo, pygame.sprite.Sprite):
     def attack(self, surface, target):
         # coordenada x, y, largura e altura. será o alcance do ataque
         attacking_rect = pygame.Rect(
-            self.rect.centerx, self.rect.y, self.rect.width * -3, self.rect.height)
+            self.rect.centerx, self.rect.y, self.rect.width * -1, self.rect.height)
         if self.pode_atacar():
             if attacking_rect.colliderect(target.rect):
                 dano = self.power
@@ -188,7 +188,7 @@ class EvilWizardFire(Inimigo, pygame.sprite.Sprite):
     def attack(self, surface, target):
         # coordenada x, y, largura e altura. será o alcance do ataque
         attacking_rect = pygame.Rect(
-            self.rect.centerx, self.rect.y, self.rect.width * -3, self.rect.height)
+            self.rect.centerx, self.rect.y, self.rect.width * -1, self.rect.height)
         if self.pode_atacar():
             if attacking_rect.colliderect(target.rect):
                 dano = self.power
@@ -260,7 +260,7 @@ class Cultist(Inimigo, pygame.sprite.Sprite):
     def attack(self, surface, target):
         # coordenada x, y, largura e altura. será o alcance do ataque
         attacking_rect = pygame.Rect(
-            self.rect.centerx, self.rect.y, self.rect.width * -3, self.rect.height)
+            self.rect.centerx, self.rect.y, self.rect.width * -1, self.rect.height)
         if self.pode_atacar():
             if attacking_rect.colliderect(target.rect):
                 dano = self.power
