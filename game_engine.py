@@ -39,14 +39,14 @@ sprite_evilwizardfire = pygame.image.load(os.path.join(
 
 todas_as_sprites = pygame.sprite.Group()
 
-# Instâncias
+# instâncias
 
 hunter = Hunter(sprite_hunter, -120, 60)
 warrior = Warrior(sprite_warrior, -100, 100)
 wizard = Wizard(sprite_wizard, -40, 100)
 knight = Knight(-20, 250)
 
-
+# backgrounds
 menu = pygame.image.load("images/fundo/menu.png").convert()
 menu = pygame.transform.scale(menu, (largura, altura))
 
@@ -61,9 +61,6 @@ battle3 = pygame.transform.scale(battle3, (largura, altura))
 
 battle4 = pygame.image.load("images/fundo/Battleground4.0.png").convert()
 battle4 = pygame.transform.scale(battle4, (largura, altura))
-
-fundo_best = pygame.image.load("images/fundo/best01.jpg").convert()
-fundo_best = pygame.transform.scale(fundo_best, (largura, altura))
 
 escolha = pygame.image.load("images/fundo/escolha.png").convert()
 escolha = pygame.transform.scale(escolha, (largura, altura))
@@ -102,26 +99,20 @@ class GameEngine:
             elif self.current_cena == "escolher_personagem":
                 self.current_cena = self.cena_escolher_personagem()
 
-
     def cena_menu(self):
         """
         função onde é desenhada na tela a cena do menu principal
         contando com play e exit
         """
-
-
         play_botao = pygame.Rect(largura // 2 - 100, altura // 2 - 25, 200, 50)
-        play_cor = black
         play_texto = "Play"
 
         continue_botao = pygame.Rect(
             largura // 2 - 100, altura // 2 + 50, 200, 50)
-        continue_cor = black
         continue_texto = "Continue Game"
 
         exit_botao = pygame.Rect(
             largura // 2 - 100, altura // 2 + 125, 200, 50)
-        exit_cor = black
         exit_texto = "Exit"
 
         if os.path.isfile('progresso.csv'):
@@ -129,11 +120,9 @@ class GameEngine:
             continue_texto_renderizado = fonte.render(
                 continue_texto, True, white)
             tela.blit(continue_texto_renderizado, (continue_botao.x + (continue_botao.width - continue_texto_renderizado.get_width()
-                      
+
                                                                        ) // 2, continue_botao.y + (continue_botao.height - continue_texto_renderizado.get_height()) // 2))
 
-        
-        
         while True:
             for event in pygame.event.get():
                 if event.type == QUIT:
@@ -171,8 +160,6 @@ class GameEngine:
                                                                ) // 2, exit_botao.y + (exit_botao.height - exit_texto_renderizado.get_height()) // 2))
 
             pygame.display.flip()
-
-
 
     def cena_escolher_personagem(self):
         """
@@ -259,19 +246,15 @@ class GameEngine:
             tela.blit(self.dungeon.get_current_floor().image, (0, 0))
 
             if not sprite_inimigos:
-                if self.dungeon.advance_to_next_floor():
-                    tela.blit(self.dungeon.get_current_floor().image, (0, 0))
-                    # cria os inimigos para o novo andar
-                    sprite_inimigos = pygame.sprite.Group()
-                    self.dungeon.get_current_floor().create_enemy(sprite_inimigos)
-                    return 
-            # esse for não tinha esperança de dar certo, mas deu, puthon é surreal kkkkkkk
+                self.next_floor()
+                return
 
             current_player = self.get_current_player()
             if current_player:
-                self.dungeon.get_current_floor().get_current_enemy().auto_attack(tela, current_player)
+                self.dungeon.get_current_floor().get_current_enemy().auto_attack(tela, current_player) #chama a função "auto-atack" do inimigo
                 self.draw_health_bar(current_player.health, 20, 20)
-                self.draw_health_bar(self.dungeon.get_current_floor().get_current_enemy().health, 680, 20)
+                self.draw_health_bar(
+                    self.dungeon.get_current_floor().get_current_enemy().health, 680, 20)
 
                 if self.dungeon.get_current_floor().get_current_enemy().alive() == False:
                     self.next_floor()
@@ -285,6 +268,10 @@ class GameEngine:
                 pygame.display.flip()  # atualiza a tela
 
     def cena_progresso(self):
+        """
+        cena que irá aparecer sempre que um andar for concluído, exceto se for o último andar.
+        aqui vai ter na tela a lógica de leitura e escrita do arquivo csv para salvar o progresso.
+        """
 
         texto_salvar = fonte.render(
             "Concluiu esse Floor! deseja salvar?", True, black)
@@ -342,6 +329,10 @@ class GameEngine:
             pygame.display.flip()
 
     def salvar_progresso_csv(self):
+        """
+        salva o progresso do jogo em um arquivo CSV chamado 'progresso.csv'.
+        o progresso inclui o número do andar atual (current_floor) e informações do jogador atual (current_player).
+        """
         with open('progresso.csv', 'w', newline='') as csvfile:
             fieldnames = ['current_floor', 'current_player']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -354,24 +345,32 @@ class GameEngine:
             if current_player:
                 writer.writerow({
                     'current_floor': current_floor,
-                    'current_player': str(current_player)
+                    'current_player': str(current_player) # salva o nome do personagem de acordo  com seu método mágico __str__.
                 })
-           
 
     def carregar_progresso_csv(self):
-        with open('progresso.csv', 'r') as csvfile:
+        """
+        carrega o progresso do jogo a partir do arquivo CSV 'progresso.csv'.
+        Atualiza o andar atual (current_floor) e cria o jogador a partir das informações salvas no arquivo.
+        """
+        with open('progresso.csv', 'r') as csvfile:  # 'r' para ler o arquivo (read)
             reader = csv.DictReader(csvfile)
             for row in reader:
                 print("Lendo progresso do arquivo...")
-                self.dungeon.set_current_floor(int(row['current_floor']))
-                string_personagem = row['current_player']
+                self.dungeon.set_current_floor(int(row['current_floor'])) # pega a  informação do current_floor no arquivo e converte para int
+                string_personagem = row['current_player'] # pega a informação do do player salva no arquivo para usar no método "criar_personagem_a_partir_de_string"
                 print("Personagem do arquivo:", string_personagem)
-                jogador = self.criar_personagem_a_partir_de_string(string_personagem)
+                jogador = self.criar_personagem_a_partir_de_string(
+                    string_personagem)
                 if jogador:
                     todas_as_sprites.add(jogador)
 
     def criar_personagem_a_partir_de_string(self, string_personagem):
-        if string_personagem == 'Warrior':
+        """
+        quando o arquivo é lido, cria o personagem de acordo com a sua string de identificação salva no seu método __str__ que foi salva no arquivo.
+        recebe um argumento "string_personagem" que é essa informação salva no arquivo
+        """
+        if string_personagem == 'Warrior': 
             return Warrior(sprite_warrior, -100, 100)
         elif string_personagem == 'Hunter':
             return Hunter(sprite_hunter, -120, 60)
@@ -383,17 +382,16 @@ class GameEngine:
             print("Personagem não reconhecido:", string_personagem)
             return None
 
-
     def next_floor(self):
         """
         essa função verifica se o Floor não ultrapassou o numero existente de Floors,
-        então chama novamente a função cena_jogar()
+        então chama novamente a função cena_jogar() e avança para o próximo floor
         """
         if self.dungeon.get_current_floor_number() < 3:
-            self.dungeon.set_current_floor(1)
+            self.dungeon.set_current_floor(1) # current_floor += 1.
             self.cena_progresso()
             self.cena_jogar()
-        elif self.dungeon.get_current_floor().get_current_enemy() > 3:
+        elif self.dungeon.get_current_floor_number() > 3: # se passou do último floor, o jogo fecha.
             pygame.quit()
             sys.exit()
         else:
@@ -402,12 +400,12 @@ class GameEngine:
     def draw_health_bar(self, health, x, y):
         """
         desenha as barras de saúde do personagem e do inimigo na tela
+        recebe como argumento a vida do usuario (personagem ou inimigo) e a posição que a barra de vida irá ficar na tela.
         """
         ratio = health / 100
         pygame.draw.rect(tela, white, (x - 4, y - 4, 408, 38))
         pygame.draw.rect(tela, red, (x, y, 400, 30))
         pygame.draw.rect(tela, yellow, (x, y, 400 * ratio, 30))
-
 
     def get_current_player(self):
         for i in todas_as_sprites:
@@ -420,26 +418,34 @@ class GameEngine:
 class Dungeon:
     def __init__(self):
         self.__floors = [Floor("Floor 1", battle1, "EvilWizard"),
-                       Floor("Floor 2", battle2, "EvilWizardFire"),
-                       Floor("Floor 3", battle3, "Cultist"),
-                       Floor("Floor 4", battle4, "DarkWarrior")]
+                         Floor("Floor 2", battle2, "EvilWizardFire"),
+                         Floor("Floor 3", battle3, "Cultist"),
+                         Floor("Floor 4", battle4, "DarkWarrior")]
         self.__current_floor = 0
 
     def get_current_floor(self):
+        """
+        retorna o objeto floor de acordo com o número do floor atual.
+        """
         if 0 <= self.__current_floor < len(self.__floors):
             return self.__floors[self.__current_floor]
         else:
             return None
-        
+
     def get_current_floor_number(self):
+        """
+        retorna o número do andar atual.
+        """
         return self.__current_floor
-    
+
     def set_current_floor(self, new):
+        """
+        recebe o argumento "new" que sempre vai ser 1, para que assim que a função seja chamada ela incrementar + 1 no current floor
+        (avançar um floor).
+        """
         self.__current_floor += new
 
-    def advance_to_next_floor(self):
-        self.__current_floor += 1
-        return 0 <= self.__current_floor < len(self.__floors)
+
 
 
 class Floor:
@@ -450,6 +456,10 @@ class Floor:
         self.__current_enemy = None
 
     def create_enemy(self, group):
+        """
+        recebe como argumento um group vazio e dependendo de qual floor estamos trabalhando,
+        coloca o inimigo desse floor  no group e salva o mesmo em current_enemy.
+        """
         if self.enemy_type == "EvilWizard":
             enemy = EvilWizard(sprite_evilwizard)
         elif self.enemy_type == "EvilWizardFire":
@@ -465,8 +475,11 @@ class Floor:
             group.add(enemy)
             self.__current_enemy = enemy
         return enemy
-    
+
     def get_current_enemy(self):
+        """
+        retorna o current_enemy
+        """
         return self.__current_enemy
 
 
