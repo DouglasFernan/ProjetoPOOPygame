@@ -2,7 +2,6 @@ import sys
 import pygame
 import os
 from pygame.locals import *
-from projeto import *
 from personagens import *
 from inimigos import *
 import csv
@@ -47,8 +46,8 @@ wizard = Wizard(sprite_wizard, -40, 100)
 knight = Knight(-20, 250)
 
 # backgrounds
-menu = pygame.image.load("images/fundo/menu.png").convert()
-menu = pygame.transform.scale(menu, (largura, altura))
+# menu = pygame.image.load("images/fundo/menu.png").convert()
+# menu = pygame.transform.scale(menu, (largura, altura))
 
 battle1 = pygame.image.load("images/fundo/Battleground1.0.png").convert()
 battle1 = pygame.transform.scale(battle1, (largura, altura))
@@ -437,7 +436,7 @@ class Dungeon:
         retorna o número do andar atual.
         """
         return self.__current_floor
-
+ 
     def set_current_floor(self, new):
         """
         recebe o argumento "new" que sempre vai ser 1, para que assim que a função seja chamada ela incrementar + 1 no current floor

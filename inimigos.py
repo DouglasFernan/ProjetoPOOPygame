@@ -4,12 +4,29 @@ import random
 
 class Inimigo:                    # Inimigo pai
     def __init__(self):
-        self._nome = ''
-        self._ataque = 1
-        self._vida = 1
-        self._descricao = ''
+        self.health = 100
+        self.power = 10
+        self.is_alive = True
+        self.cooldown = 0
+        self.attack_cooldown_duration = random.randint(100, 200)
+        self.sprites = []
 
+    def pode_atacar(self):
+        pass
+    def update_cooldown(self):
+        pass
 
+    def auto_attack(self, surface, target):
+        pass
+
+    def attack(self, surface, target):
+        pass
+
+    def alive(self):
+        if self.health <= 0:
+            self.health = 0
+            self.is_alive = False
+            return False
 
 class DarkWarrior(Inimigo, pygame.sprite.Sprite):
     def __init__(self, sprite):

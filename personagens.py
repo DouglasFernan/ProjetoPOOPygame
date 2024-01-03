@@ -5,9 +5,13 @@ import pygame
 
 class Personagem:                # Personagem pai
     def __init__(self, nome):
-        self._nome = nome
-        self._ataque = 1
-        self._vida = 1
+        pygame.sprite.Sprite.__init__(self)
+        self.jump = False
+        self.attacking = False
+        self.health = 100
+        self.power = 10
+        self.sprites = []
+
         
 
     def ataque_basico(self, alvo):
@@ -16,12 +20,16 @@ class Personagem:                # Personagem pai
 
 class Wizard(Personagem, pygame.sprite.Sprite):
     def __init__(self, sprite, x, y):
+        """
+        inicializa um wizard com sprite, posição inicial x e y.
+
+        - x (int): Posição inicial x.
+        - y (int): Posição inicial y.
+        """
         pygame.sprite.Sprite.__init__(self)
         self.attacking = False
         self.vel_y = 0
         self.jump = False
-        self.attacking = False
-        self.attack_type = 0
         self.health = 100
         self.power = 30
         self.cooldown = 0
@@ -36,12 +44,17 @@ class Wizard(Personagem, pygame.sprite.Sprite):
         self.image = self.sprites[self.index_lista]
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
-        self.life = 100
 
     def __str__(self):
+        """
+        retorna uma representação em string de wizard
+        """
         return "Wizard"
 
     def update(self):
+        """
+        atualiza a velocidade de animação da sprite e o cooldown do personagem
+        """
         if self.index_lista > 5:
             self.index_lista = 0
         self.index_lista += 0.25
@@ -49,13 +62,25 @@ class Wizard(Personagem, pygame.sprite.Sprite):
         self.update_cooldown()
 
     def update_cooldown(self):
+        """
+        atualiza o cooldown
+        """
         if self.cooldown > 0:
             self.cooldown -= 1
 
     def pode_atacar(self):
+        """
+        verifica se o personagem pode realizar um ataque
+        """
         return self.cooldown <= 0
     
     def move(self, surface, target):
+        """
+        Move o feiticeiro na tela em resposta às teclas pressionadas.
+:
+        - surface (pygame.Surface): tela do jogo.
+        - target (Personagem): alvo do personagem
+        """
         SPEED = 10
         GRAVITY = 2
         dx = 0  # (direction x) nada muda, posição do jogador está parada
@@ -85,8 +110,6 @@ class Wizard(Personagem, pygame.sprite.Sprite):
                 # if key[pygame.K_n]:
                 #     self.attack_type =2
 
-            
-            
         # aplicar gravidade
         self.vel_y += GRAVITY
         dy += self.vel_y
@@ -107,6 +130,12 @@ class Wizard(Personagem, pygame.sprite.Sprite):
         self.rect.y += dy
 
     def attack(self, surface, target):
+        """
+        realiza um ataque no alvo especificado.
+
+        - surface (pygame.Surface): tela do jogo.
+        - target (Personagem): alvo do ataque.
+        """
         attacking_rect = pygame.Rect(self.rect.centerx, self.rect.y, self.rect.width * 0.3, self.rect.height) #coordenada x, y, largura e altura. será o alcance do ataque
         if self.pode_atacar():
             if attacking_rect.colliderect(target.rect):
@@ -128,7 +157,6 @@ class Warrior(Personagem, pygame.sprite.Sprite):
         self.vel_y = 0
         self.jump = False
         self.attacking = False
-        self.attack_type = 0
         self.health = 100
         self.power = 2.5
         self.cooldown = 0
@@ -235,7 +263,6 @@ class Hunter(Personagem, pygame.sprite.Sprite):
         self.vel_y = 0
         self.jump = False
         self.attacking = False
-        self.attack_type = 0
         self.health = 100
         self.power = 2
         self.cooldown = 0
@@ -341,7 +368,6 @@ class Knight(Personagem, pygame.sprite.Sprite):
         self.vel_y = 0
         self.jump = False
         self.attacking = False
-        self.attack_type = 0
         self.health = 100
         self.power = 2.3
         self.cooldown = 0
@@ -363,8 +389,8 @@ class Knight(Personagem, pygame.sprite.Sprite):
             "sprites/knight/HeroKnight_Idle_6.png"))
         self.sprites.append(pygame.image.load(
             "sprites/knight/HeroKnight_Idle_7.png"))
-        self.atual = 0
-        self.image = self.sprites[self.atual]
+        self.index_lista = 0
+        self.image = self.sprites[self.index_lista]
 
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
@@ -374,10 +400,10 @@ class Knight(Personagem, pygame.sprite.Sprite):
 
 
     def update(self):
-        self.atual = self.atual + 0.5
-        if self.atual >= len(self.sprites):
-            self.atual = 0
-        self.image = self.sprites[int(self.atual)]
+        self.index_lista = self.index_lista + 0.5
+        if self.index_lista >= len(self.sprites):
+            self.index_lista = 0
+        self.image = self.sprites[int(self.index_lista)]
         self.image = pygame.transform.scale(self.image, (100*4, 55*4))
         self.update_cooldown()
 
