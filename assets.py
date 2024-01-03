@@ -1,3 +1,0 @@
-
-
-# módulo pickle
