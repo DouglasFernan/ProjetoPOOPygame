@@ -1,24 +1,24 @@
 import pygame
+import random
 
 
 class Inimigo:                    # Inimigo pai
     def __init__(self):
         self._nome = ''
         self._ataque = 1
-        self._defesa = 1
         self._vida = 1
-        self._maxVida = self._vida
         self._descricao = ''
 
-    def ataque_basico(self, alvo):
-        pass
 
 
 class DarkWarrior(Inimigo, pygame.sprite.Sprite):
     def __init__(self, sprite):
         pygame.sprite.Sprite.__init__(self)
         self.health = 100
+        self.power = 10
         self.is_alive = True
+        self.cooldown = 0
+        self.attack_cooldown_duration = random.randint(100, 200)
         self.sprites = []
         for i in range(8):
             img = sprite.subsurface((i * 100, 0), (100, 100))
@@ -36,16 +36,38 @@ class DarkWarrior(Inimigo, pygame.sprite.Sprite):
         self.index_lista += 0.50
         self.image = self.sprites[int(self.index_lista)]
         self.image = pygame.transform.flip(self.image, True, False)
+        self.update_cooldown()
+
+    def pode_atacar(self):
+        return self.cooldown <= 0
+
+    def update_cooldown(self):
+        if self.cooldown > 0:
+            self.cooldown -= 1
+        else:
+            # Atualiza o cooldown aleatório após o ataque
+            self.attack_cooldown_duration = random.randint(100, 200)
+
+    def auto_attack(self, surface, target):
+        # Verifica se pode atacar com base no cooldown
+        if self.pode_atacar():
+            self.attack(surface, target)
+            # Reinicia o cooldown
+            self.cooldown = self.attack_cooldown_duration
 
     def attack(self, surface, target):
-        self.attacking = True
-        attacking_rect = pygame.Rect(self.rect.centerx, self.rect.y, self.rect.width, self.rect.height) #coordenada x, y, largura e altura. será o alcance do ataque
-        if attacking_rect.colliderect(target.rect):
-            dano = self.power
-            target.health = - dano     
-        
-        pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
-        self.attacking = False
+        # coordenada x, y, largura e altura. será o alcance do ataque
+        attacking_rect = pygame.Rect(
+            self.rect.centerx, self.rect.y, self.rect.width * -3, self.rect.height)
+        if self.pode_atacar():
+            if attacking_rect.colliderect(target.rect):
+                dano = self.power
+                target.health -= dano
+                print('inimigo acertou')
+            else:
+                print('inimigo errou')
+
+            pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
 
     def alive(self):
         if self.health <= 0:
@@ -58,7 +80,10 @@ class EvilWizard(Inimigo, pygame.sprite.Sprite):
     def __init__(self, sprite):
         pygame.sprite.Sprite.__init__(self)
         self.health = 100
+        self.power = 10
         self.is_alive = True
+        self.cooldown = 0
+        self.attack_cooldown_duration = random.randint(100, 200)
         self.sprites = []
         for i in range(8):
             img = sprite.subsurface((i * 250, 0), (250, 250))
@@ -76,17 +101,38 @@ class EvilWizard(Inimigo, pygame.sprite.Sprite):
         self.index_lista += 0.50
         self.image = self.sprites[int(self.index_lista)]
         self.image = pygame.transform.flip(self.image, True, False)
+        self.update_cooldown()
+
+    def pode_atacar(self):
+        return self.cooldown <= 0
+
+    def update_cooldown(self):
+        if self.cooldown > 0:
+            self.cooldown -= 1
+        else:
+            # Atualiza o cooldown aleatório após o ataque
+            self.attack_cooldown_duration = random.randint(100, 200)
+
+    def auto_attack(self, surface, target):
+        # Verifica se pode atacar com base no cooldown
+        if self.pode_atacar():
+            self.attack(surface, target)
+            # Reinicia o cooldown
+            self.cooldown = self.attack_cooldown_duration
 
     def attack(self, surface, target):
-        self.attacking = True
-        attacking_rect = pygame.Rect(self.rect.centerx, self.rect.y, self.rect.width, self.rect.height) #coordenada x, y, largura e altura. será o alcance do ataque
-        if attacking_rect.colliderect(target.rect):
-            dano = self.power
-            target.health = - dano     
-        
-        pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
-        self.attacking = False
+        # coordenada x, y, largura e altura. será o alcance do ataque
+        attacking_rect = pygame.Rect(
+            self.rect.centerx, self.rect.y, self.rect.width * -3, self.rect.height)
+        if self.pode_atacar():
+            if attacking_rect.colliderect(target.rect):
+                dano = self.power
+                target.health -= dano
+                print('inimigo acertou')
+            else:
+                print('inimigo errou')
 
+            pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
 
     def alive(self):
         if self.health <= 0:
@@ -99,7 +145,10 @@ class EvilWizardFire(Inimigo, pygame.sprite.Sprite):
     def __init__(self, sprite):
         pygame.sprite.Sprite.__init__(self)
         self.health = 100
-        self.is_alive = True       
+        self.power = 10
+        self.is_alive = True
+        self.cooldown = 0
+        self.attack_cooldown_duration = random.randint(100, 200)
         self.sprites = []
         for i in range(8):
             img = sprite.subsurface((i * 150, 0), (150, 150))
@@ -117,17 +166,38 @@ class EvilWizardFire(Inimigo, pygame.sprite.Sprite):
         self.index_lista += 0.50
         self.image = self.sprites[int(self.index_lista)]
         self.image = pygame.transform.flip(self.image, True, False)
+        self.update_cooldown()
+
+    def pode_atacar(self):
+        return self.cooldown <= 0
+
+    def update_cooldown(self):
+        if self.cooldown > 0:
+            self.cooldown -= 1
+        else:
+            # Atualiza o cooldown aleatório após o ataque
+            self.attack_cooldown_duration = random.randint(100, 200)
+
+    def auto_attack(self, surface, target):
+        # Verifica se pode atacar com base no cooldown
+        if self.pode_atacar():
+            self.attack(surface, target)
+            # Reinicia o cooldown
+            self.cooldown = self.attack_cooldown_duration
 
     def attack(self, surface, target):
-        self.attacking = True
-        attacking_rect = pygame.Rect(self.rect.centerx, self.rect.y, self.rect.width, self.rect.height) #coordenada x, y, largura e altura. será o alcance do ataque
-        if attacking_rect.colliderect(target.rect):
-            dano = self.power
-            target.health = - dano     
-        
-        pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
-        self.attacking = False
+        # coordenada x, y, largura e altura. será o alcance do ataque
+        attacking_rect = pygame.Rect(
+            self.rect.centerx, self.rect.y, self.rect.width * -3, self.rect.height)
+        if self.pode_atacar():
+            if attacking_rect.colliderect(target.rect):
+                dano = self.power
+                target.health -= dano
+                print('inimigo acertou')
+            else:
+                print('inimigo errou')
 
+            pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
 
     def alive(self):
         if self.health <= 0:
@@ -135,11 +205,15 @@ class EvilWizardFire(Inimigo, pygame.sprite.Sprite):
             self.is_alive = False
             return False
 
+
 class Cultist(Inimigo, pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.health = 100
+        self.power = 10
         self.is_alive = True
+        self.cooldown = 0
+        self.attack_cooldown_duration = random.randint(100, 200)
         self.sprites = []
         self.sprites.append(pygame.image.load(
             "sprites/cultist/cultist_priest_idle_1.png"))
@@ -151,30 +225,51 @@ class Cultist(Inimigo, pygame.sprite.Sprite):
             "sprites/cultist/cultist_priest_idle_4.png"))
         self.sprites.append(pygame.image.load(
             "sprites/cultist/cultist_priest_idle_5.png"))
-        self.atual = 0
-        self.image = self.sprites[self.atual]
+        self.index_lista = 0
+        self.image = self.sprites[self.index_lista]
 
         self.rect = self.image.get_rect()
         self.rect.topleft = (650, 170)
 
     def update(self):
-        self.atual = self.atual + 0.5
-        if self.atual >= len(self.sprites):
-            self.atual = 0
-        self.image = self.sprites[int(self.atual)]
+        self.index_lista += 0.50
+        if self.index_lista >= len(self.sprites):
+            self.index_lista = 0
+        self.image = self.sprites[int(self.index_lista)]
         self.image = pygame.transform.scale(self.image, (200*1.5, 200*1.5))
         self.image = pygame.transform.flip(self.image, True, False)
+        self.update_cooldown()
+
+    def pode_atacar(self):
+        return self.cooldown <= 0
+
+    def update_cooldown(self):
+        if self.cooldown > 0:
+            self.cooldown -= 1
+        else:
+            # atualiza o cooldown aleatório após o ataque
+            self.attack_cooldown_duration = random.randint(100, 200)
+
+    def auto_attack(self, surface, target):
+        # aerifica se pode atacar com base no cooldown
+        if self.pode_atacar():
+            self.attack(surface, target)
+            # reinicia o cooldown
+            self.cooldown = self.attack_cooldown_duration
 
     def attack(self, surface, target):
-        self.attacking = True
-        attacking_rect = pygame.Rect(self.rect.centerx, self.rect.y, self.rect.width, self.rect.height) #coordenada x, y, largura e altura. será o alcance do ataque
-        if attacking_rect.colliderect(target.rect):
-            dano = self.power
-            target.health = - dano     
-        
-        pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
-        self.attacking = False
+        # coordenada x, y, largura e altura. será o alcance do ataque
+        attacking_rect = pygame.Rect(
+            self.rect.centerx, self.rect.y, self.rect.width * -3, self.rect.height)
+        if self.pode_atacar():
+            if attacking_rect.colliderect(target.rect):
+                dano = self.power
+                target.health -= dano
+                print('inimigo acertou')
+            else:
+                print('inimigo errou')
 
+            pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
 
     def alive(self):
         if self.health <= 0:

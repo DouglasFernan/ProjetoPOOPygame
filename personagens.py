@@ -7,11 +7,7 @@ class Personagem:                # Personagem pai
     def __init__(self, nome):
         self._nome = nome
         self._ataque = 1
-        self._defesa = 1
         self._vida = 1
-        self._maxVida = self._vida
-        self._descricao = ''
-        self._xp = 0
         
 
     def ataque_basico(self, alvo):
@@ -27,7 +23,7 @@ class Wizard(Personagem, pygame.sprite.Sprite):
         self.attacking = False
         self.attack_type = 0
         self.health = 100
-        self.power = 3
+        self.power = 30
         self.cooldown = 0
         self.cooldown_duration = 10
         self.sprites = []
