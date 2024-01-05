@@ -1,9 +1,9 @@
 import pygame
+from abc import ABC, abstractmethod
 
 
 
-
-class Personagem:                # Personagem pai
+class Personagem(ABC):                # Personagem pai
     def __init__(self, nome):
         pygame.sprite.Sprite.__init__(self)
         self.jump = False
@@ -25,7 +25,16 @@ class Personagem:                # Personagem pai
         verifica se o personagem pode realizar um ataque
         """
         return self.cooldown <= 0
+    
+    
+    @abstractmethod
+    def move(self, surface, target):
+        pass
 
+
+    @abstractmethod
+    def update(self):
+        pass
 
 class Wizard(Personagem, pygame.sprite.Sprite):
     def __init__(self, sprite, x, y):

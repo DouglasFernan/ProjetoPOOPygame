@@ -1,6 +1,6 @@
 # ProjetoPOOPygame
 
-## Instruçõs:
+# Instruçõs:
 
 ## Clonando o Repositório
 
